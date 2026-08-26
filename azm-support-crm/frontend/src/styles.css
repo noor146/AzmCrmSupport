@@ -1,6 +1,20 @@
 :root {
-  font-family: system-ui, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   color-scheme: light;
+  --ink: #1a2420;
+  --ink-soft: #5b6a63;
+  --ground: #f4f5f3;
+  --panel: #ffffff;
+  --line: #dde3de;
+  --navy: #1f2937;
+  --navy-soft: #2c3a4d;
+  --accent: #16806a;
+  --accent-hover: #106b58;
+  --accent-tint: #e3f2ee;
+}
+
+h1, h2, h3 {
+  font-family: 'Archivo', system-ui, sans-serif;
 }
 
 html, body {
@@ -110,29 +124,223 @@ html, body {
 .login-page {
   flex: 1;
   display: flex;
+  min-height: 100vh;
+}
+
+.login-brand {
+  flex: 1.1;
+  background: var(--navy);
+  color: #e7ebee;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.5rem clamp(1.75rem, 5vw, 4rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-brand::after {
+  content: '';
+  position: absolute;
+  inset-inline-end: -6rem;
+  bottom: -6rem;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--navy-soft), transparent 70%);
+}
+
+.login-brand-top {
+  display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.65rem;
+  z-index: 1;
+}
+
+.brand-mark {
+  display: inline-flex;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.brand-mark-stub {
+  width: 7px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.brand-mark-stub:last-child {
+  background: #e7ebee;
+  opacity: 0.5;
+}
+
+.brand-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #aab5c0;
+}
+
+.login-brand-body {
+  z-index: 1;
+  max-width: 26rem;
+}
+
+.login-brand-body h1 {
+  font-size: clamp(1.8rem, 3.4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 0.9rem;
+  text-wrap: balance;
+}
+
+.login-brand-body p {
+  font-size: 1.02rem;
+  color: #c3cbd3;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.login-brand-tags {
+  z-index: 1;
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.login-brand-tags li {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.74rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #cdd5db;
+}
+
+.login-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--ground);
+  padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
+}
+
+.login-panel-top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.locale-select {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
 }
 
 .login-form {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 300px;
+  justify-content: center;
+  gap: 1.1rem;
+  max-width: 22rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.login-form-head h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
 }
 
 .login-form label {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  font-size: 0.9rem;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.login-form input {
+  font: inherit;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+  color: var(--ink);
+}
+
+.login-form input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.login-form button {
+  font: inherit;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 7px;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+}
+
+.login-form button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.login-form button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.login-demo-hint {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  text-align: center;
+  margin: 0;
+}
+
+.login-demo-hint code {
+  font-family: 'IBM Plex Mono', monospace;
+  background: var(--accent-tint);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+@media (max-width: 760px) {
+  .login-page {
+    flex-direction: column;
+  }
+  .login-brand {
+    flex: none;
+    padding: 2rem 1.5rem;
+  }
+  .login-brand-body h1 {
+    font-size: 1.8rem;
+  }
 }
 
 .error {
-  color: #dc2626;
+  color: #b3261e;
+  font-size: 0.85rem;
+  margin: 0;
 }
 
 .ticket-detail dl {
