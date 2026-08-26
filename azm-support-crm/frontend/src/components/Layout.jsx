@@ -24,7 +24,7 @@ export default function Layout() {
             <option value="ar">AR</option>
           </select>
           <span className="user-name">{user?.name}</span>
-          <button onClick={logout}>{t('logout')}</button>
+          <button className="btn-ghost" onClick={logout}>{t('logout')}</button>
         </div>
       </header>
       <main className="content">

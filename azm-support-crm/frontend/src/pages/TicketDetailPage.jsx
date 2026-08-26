@@ -63,7 +63,7 @@ export default function TicketDetailPage() {
         ))}
       </ul>
 
-      <button onClick={handleDelete}>{t('delete')}</button>
+      <button className="btn-danger" onClick={handleDelete}>{t('delete')}</button>
     </div>
   );
 }

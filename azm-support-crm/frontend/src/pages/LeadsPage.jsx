@@ -60,7 +60,7 @@ export default function LeadsPage() {
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
-        <button onClick={() => setShowForm((s) => !s)}>{t('newLead')}</button>
+        <button className="btn-primary" onClick={() => setShowForm((s) => !s)}>{t('newLead')}</button>
       </div>
 
       {showForm && (
@@ -84,7 +84,7 @@ export default function LeadsPage() {
           )}
 
           <div>
-            <button type="submit">{t('save')}</button>
+            <button type="submit" className="btn-primary">{t('save')}</button>
             <button type="button" onClick={() => setShowForm(false)}>{t('cancel')}</button>
           </div>
         </form>
@@ -113,7 +113,7 @@ export default function LeadsPage() {
                 <td>{lead.priority}</td>
                 <td>{lead.status}</td>
                 <td>
-                  <button onClick={() => handleDelete(lead.id)}>{t('delete')}</button>
+                  <button className="btn-danger" onClick={() => handleDelete(lead.id)}>{t('delete')}</button>
                 </td>
               </tr>
             ))}

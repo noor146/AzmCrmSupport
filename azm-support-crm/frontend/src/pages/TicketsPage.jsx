@@ -76,7 +76,7 @@ export default function TicketsPage() {
           <input type="checkbox" checked={mine} onChange={(e) => setMine(e.target.checked)} />
           {t('myTickets')}
         </label>
-        <button onClick={() => setShowForm((s) => !s)}>{t('newTicket')}</button>
+        <button className="btn-primary" onClick={() => setShowForm((s) => !s)}>{t('newTicket')}</button>
       </div>
 
       {showForm && (
@@ -96,7 +96,7 @@ export default function TicketsPage() {
             {PRIORITIES.map((p) => <option key={p} value={p}>{p}</option>)}
           </select>
           <div>
-            <button type="submit">{t('save')}</button>
+            <button type="submit" className="btn-primary">{t('save')}</button>
             <button type="button" onClick={() => setShowForm(false)}>{t('cancel')}</button>
           </div>
         </form>

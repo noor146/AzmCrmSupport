@@ -43,7 +43,7 @@ export default function CustomersPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button onClick={() => setShowForm((s) => !s)}>{t('newCustomer')}</button>
+        <button className="btn-primary" onClick={() => setShowForm((s) => !s)}>{t('newCustomer')}</button>
       </div>
 
       {showForm && (
@@ -54,7 +54,7 @@ export default function CustomersPage() {
           <input placeholder={t('company')} value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
           <textarea placeholder={t('notes')} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
           <div>
-            <button type="submit">{t('save')}</button>
+            <button type="submit" className="btn-primary">{t('save')}</button>
             <button type="button" onClick={() => setShowForm(false)}>{t('cancel')}</button>
           </div>
         </form>
@@ -79,7 +79,7 @@ export default function CustomersPage() {
                 <td>{c.phone}</td>
                 <td>{c.company}</td>
                 <td>
-                  <button onClick={() => handleDelete(c.id)}>{t('delete')}</button>
+                  <button className="btn-danger" onClick={() => handleDelete(c.id)}>{t('delete')}</button>
                 </td>
               </tr>
             ))}

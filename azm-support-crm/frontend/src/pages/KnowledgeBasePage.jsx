@@ -39,7 +39,7 @@ export default function KnowledgeBasePage() {
     <div>
       <div className="page-header">
         <input className="search" placeholder={t('search')} value={q} onChange={(e) => setQ(e.target.value)} />
-        <button onClick={() => setShowForm((s) => !s)}>{t('newArticle')}</button>
+        <button className="btn-primary" onClick={() => setShowForm((s) => !s)}>{t('newArticle')}</button>
       </div>
 
       {showForm && (
@@ -48,7 +48,7 @@ export default function KnowledgeBasePage() {
           <textarea placeholder={t('body')} required value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
           <input placeholder={t('tags')} value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
           <div>
-            <button type="submit">{t('save')}</button>
+            <button type="submit" className="btn-primary">{t('save')}</button>
             <button type="button" onClick={() => setShowForm(false)}>{t('cancel')}</button>
           </div>
         </form>
@@ -60,7 +60,7 @@ export default function KnowledgeBasePage() {
             <h3>{article.title}</h3>
             <p>{article.body}</p>
             <div className="tags">{article.tags.map((tag) => <span key={tag} className="tag">{tag}</span>)}</div>
-            <button onClick={() => handleDelete(article.id)}>{t('delete')}</button>
+            <button className="btn-danger" onClick={() => handleDelete(article.id)}>{t('delete')}</button>
           </article>
         ))}
         {!articles.length && <p>{t('noResults')}</p>}
