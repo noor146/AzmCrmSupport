@@ -49,5 +49,16 @@
   "recentTickets": "Recent tickets",
   "welcomeBack": "Welcome back",
   "kanbanView": "Board",
-  "listView": "List"
+  "listView": "List",
+  "liveChat": "Live Chat",
+  "chatWithUs": "Chat with us",
+  "yourName": "Your name",
+  "startChat": "Start chat",
+  "typeMessage": "Type a message…",
+  "send": "Send",
+  "noConversationSelected": "Select a conversation to view it here.",
+  "closeConversation": "Close conversation",
+  "conversationClosed": "This conversation is closed.",
+  "publicHeroTitle": "We're here to help.",
+  "publicHeroBody": "Have a question about your order or account? Start a live chat in the corner and an agent will be right with you."
 }

@@ -49,5 +49,16 @@
   "recentTickets": "أحدث التذاكر",
   "welcomeBack": "أهلاً بعودتك",
   "kanbanView": "لوحة",
-  "listView": "قائمة"
+  "listView": "قائمة",
+  "liveChat": "الدردشة المباشرة",
+  "chatWithUs": "تحدث معنا",
+  "yourName": "اسمك",
+  "startChat": "ابدأ المحادثة",
+  "typeMessage": "اكتب رسالة…",
+  "send": "إرسال",
+  "noConversationSelected": "اختر محادثة لعرضها هنا.",
+  "closeConversation": "إغلاق المحادثة",
+  "conversationClosed": "هذه المحادثة مغلقة.",
+  "publicHeroTitle": "نحن هنا للمساعدة.",
+  "publicHeroBody": "عندك سؤال عن طلبك أو حسابك؟ ابدأ محادثة مباشرة من الأسفل وسيرد عليك أحد ممثلي الدعم فورًا."
 }

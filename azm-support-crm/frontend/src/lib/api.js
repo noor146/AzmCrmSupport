@@ -46,6 +46,20 @@ export const api = {
 
   getDashboard: (token) => request('/dashboard', { token }),
 
+  startConversation: (data) => request('/chat/conversations', { method: 'POST', body: data }),
+  sendVisitorMessage: (conversationId, body) =>
+    request(`/chat/conversations/${conversationId}/messages`, { method: 'POST', body: { body } }),
+  pollVisitorMessages: (conversationId, afterId) =>
+    request(`/chat/conversations/${conversationId}/messages${afterId ? `?after=${afterId}` : ''}`),
+
+  listConversations: (token, status) =>
+    request(`/chat/agent/conversations${status ? `?status=${status}` : ''}`, { token }),
+  getConversation: (token, id) => request(`/chat/agent/conversations/${id}`, { token }),
+  sendAgentMessage: (token, id, body) =>
+    request(`/chat/agent/conversations/${id}/messages`, { method: 'POST', body: { body }, token }),
+  updateConversation: (token, id, data) =>
+    request(`/chat/agent/conversations/${id}`, { method: 'PUT', body: data, token }),
+
   listLeads: (token, params = {}) => {
     const qs = new URLSearchParams(params).toString();
     return request(`/leads${qs ? `?${qs}` : ''}`, { token });

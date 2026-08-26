@@ -7,6 +7,8 @@ import TicketDetailPage from './pages/TicketDetailPage';
 import KnowledgeBasePage from './pages/KnowledgeBasePage';
 import LeadsPage from './pages/LeadsPage';
 import DashboardPage from './pages/DashboardPage';
+import LiveChatPage from './pages/LiveChatPage';
+import PublicSupportPage from './pages/PublicSupportPage';
 import { useAuth } from './lib/auth';
 
 function RequireAuth({ children }) {
@@ -18,6 +20,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/support" element={<PublicSupportPage />} />
       <Route
         path="/"
         element={
@@ -33,6 +36,7 @@ export default function App() {
         <Route path="customers" element={<CustomersPage />} />
         <Route path="leads" element={<LeadsPage />} />
         <Route path="knowledge-base" element={<KnowledgeBasePage />} />
+        <Route path="live-chat" element={<LiveChatPage />} />
       </Route>
     </Routes>
   );

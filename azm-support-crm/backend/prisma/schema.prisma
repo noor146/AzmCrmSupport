@@ -53,6 +53,7 @@ model User {
   assignedTickets Ticket[]      @relation("AssignedAgent")
   ticketEvents    TicketEvent[]
   knowledgeArticles KnowledgeArticle[]
+  chatMessages    Message[]
 
   @@unique([email])
   @@map("users")
@@ -119,6 +120,43 @@ model Lead {
   updatedAt DateTime   @updatedAt @map("updated_at")
 
   @@map("leads")
+}
+
+enum ConversationStatus {
+  OPEN   @map("open")
+  CLOSED @map("closed")
+}
+
+enum MessageSender {
+  VISITOR @map("visitor")
+  AGENT   @map("agent")
+}
+
+model Conversation {
+  id           Int                @id @default(autoincrement())
+  visitorName  String             @map("visitor_name")
+  visitorEmail String?            @map("visitor_email")
+  status       ConversationStatus @default(OPEN)
+  createdAt    DateTime           @default(now()) @map("created_at")
+  updatedAt    DateTime           @updatedAt @map("updated_at")
+
+  messages Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             Int           @id @default(autoincrement())
+  conversationId Int           @map("conversation_id")
+  sender         MessageSender
+  body           String
+  agentUserId    Int?          @map("agent_user_id")
+  createdAt      DateTime      @default(now()) @map("created_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  agentUser    User?        @relation(fields: [agentUserId], references: [id])
+
+  @@map("messages")
 }
 
 model KnowledgeArticle {
