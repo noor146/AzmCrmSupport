@@ -37,5 +37,15 @@
   "leads": "العملاء المحتملون",
   "newLead": "عميل محتمل جديد",
   "source": "المصدر",
-  "duplicateLeadWarning": "يوجد عميل محتمل بنفس البريد الإلكتروني أو رقم الهاتف:"
+  "duplicateLeadWarning": "يوجد عميل محتمل بنفس البريد الإلكتروني أو رقم الهاتف:",
+  "dashboard": "الرئيسية",
+  "totalCustomers": "العملاء",
+  "totalTickets": "التذاكر",
+  "totalLeads": "العملاء المحتملون",
+  "articles": "مقالات قاعدة المعرفة",
+  "myOpenTickets": "تذاكري المفتوحة",
+  "byStatus": "بحسب الحالة",
+  "byPriority": "بحسب الأولوية",
+  "recentTickets": "أحدث التذاكر",
+  "welcomeBack": "أهلاً بعودتك"
 }

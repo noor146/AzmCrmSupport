@@ -44,6 +44,8 @@ export const api = {
   updateArticle: (token, id, data) => request(`/knowledge-base/${id}`, { method: 'PUT', body: data, token }),
   deleteArticle: (token, id) => request(`/knowledge-base/${id}`, { method: 'DELETE', token }),
 
+  getDashboard: (token) => request('/dashboard', { token }),
+
   listLeads: (token, params = {}) => {
     const qs = new URLSearchParams(params).toString();
     return request(`/leads${qs ? `?${qs}` : ''}`, { token });

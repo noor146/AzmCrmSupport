@@ -11,6 +11,7 @@ export default function Layout() {
       <header className="topbar">
         <span className="app-name">{t('appName')}</span>
         <nav className="nav">
+          <NavLink to="/dashboard">{t('dashboard')}</NavLink>
           <NavLink to="/tickets">{t('tickets')}</NavLink>
           <NavLink to="/leads">{t('leads')}</NavLink>
           <NavLink to="/customers">{t('customers')}</NavLink>

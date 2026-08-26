@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
 
   if (token) {
-    navigate('/tickets', { replace: true });
+    navigate('/dashboard', { replace: true });
   }
 
   async function handleSubmit(e) {
@@ -22,7 +22,7 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       await login(email, password);
-      navigate('/tickets', { replace: true });
+      navigate('/dashboard', { replace: true });
     } catch {
       setError(t('invalidCredentials'));
     } finally {

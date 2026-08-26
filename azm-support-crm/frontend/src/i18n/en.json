@@ -37,5 +37,15 @@
   "leads": "Leads",
   "newLead": "New Lead",
   "source": "Source",
-  "duplicateLeadWarning": "A lead with this email or phone already exists:"
+  "duplicateLeadWarning": "A lead with this email or phone already exists:",
+  "dashboard": "Dashboard",
+  "totalCustomers": "Customers",
+  "totalTickets": "Tickets",
+  "totalLeads": "Leads",
+  "articles": "KB Articles",
+  "myOpenTickets": "My open tickets",
+  "byStatus": "By status",
+  "byPriority": "By priority",
+  "recentTickets": "Recent tickets",
+  "welcomeBack": "Welcome back"
 }

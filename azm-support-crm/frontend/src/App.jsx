@@ -6,6 +6,7 @@ import TicketsPage from './pages/TicketsPage';
 import TicketDetailPage from './pages/TicketDetailPage';
 import KnowledgeBasePage from './pages/KnowledgeBasePage';
 import LeadsPage from './pages/LeadsPage';
+import DashboardPage from './pages/DashboardPage';
 import { useAuth } from './lib/auth';
 
 function RequireAuth({ children }) {
@@ -25,7 +26,8 @@ export default function App() {
           </RequireAuth>
         }
       >
-        <Route index element={<Navigate to="/tickets" replace />} />
+        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardPage />} />
         <Route path="tickets" element={<TicketsPage />} />
         <Route path="tickets/:id" element={<TicketDetailPage />} />
         <Route path="customers" element={<CustomersPage />} />
