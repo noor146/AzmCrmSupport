@@ -1,0 +1,52 @@
+Issue Type,Summary,Description,Priority,Status,Epic Link
+Epic,Foundation (Auth & i18n),"JWT login and EN/AR i18n with RTL layout.",High,Done,
+Story,Email/password login with JWT,"Login endpoint + token issuance, seeded agent user.",High,Done,Foundation (Auth & i18n)
+Story,EN/AR language toggle with RTL layout,"Locale switch persists in localStorage; sets dir=rtl for Arabic.",Medium,Done,Foundation (Auth & i18n)
+Epic,Customer Management,"CRUD for customer profiles and contact details.",High,Done,
+Story,Create/list/search customers,"List with search by name/email/company.",High,Done,Customer Management
+Story,View/edit/delete a customer,"Detail view plus update/delete actions.",Medium,Done,Customer Management
+Epic,Ticket Management,"CRUD for tickets plus status/assignment history.",High,Done,
+Story,Create a ticket against a customer,"Subject/description/category/priority, linked to a customer.",High,Done,Ticket Management
+Story,Change ticket status/assignee,"Update endpoint records status_changed/assigned events.",High,Done,Ticket Management
+Story,Ticket activity/event log,"Full audit trail of created/status_changed/assigned events per ticket.",Medium,Done,Ticket Management
+Story,Delete a ticket,"Cascade-deletes its events.",Low,Done,Ticket Management
+Epic,Agent Dashboard,"Per-agent ticket view with filters.",Medium,Done,
+Story,List tickets assigned to the logged-in agent,"assigned_to=me query param.",Medium,Done,Agent Dashboard
+Story,Filter tickets by status,"status query param on the tickets list.",Medium,Done,Agent Dashboard
+Epic,Knowledge Base,"Public knowledge base with tag search.",Medium,Done,
+Story,Create/edit/delete articles with tags,"Authenticated CRUD for articles.",Medium,Done,Knowledge Base
+Story,Public search by title/tag,"Unauthenticated GET with q= search param.",Medium,Done,Knowledge Base
+Epic,Customer Self-Service Portal,"Let customers submit and track their own tickets.",High,To Do,
+Story,Customer login/signup,"Separate auth flow from internal agent auth.",High,To Do,Customer Self-Service Portal
+Story,Customer submits a ticket,"Web form creates a ticket tied to the logged-in customer.",High,To Do,Customer Self-Service Portal
+Story,Customer tracks their own ticket status/history,"Read-only view scoped to the customer's own tickets.",Medium,To Do,Customer Self-Service Portal
+Epic,SLA & Automation,"Response/resolution targets, auto-assignment, escalation, alerts.",High,To Do,
+Story,Define response/resolution targets per priority,"Configurable SLA targets by ticket priority.",High,To Do,SLA & Automation
+Story,Auto-assignment rules for new tickets,"Round-robin or load-based assignment on ticket creation.",Medium,To Do,SLA & Automation
+Story,Escalation rules when SLA breached,"Reassign/flag tickets that miss their SLA target.",Medium,To Do,SLA & Automation
+Story,Notifications/alerts,"Email at minimum for assignment and SLA breach.",Medium,To Do,SLA & Automation
+Epic,Reports & Management Dashboards,"Ticket/SLA/agent/CSAT reporting.",Medium,To Do,
+Story,Ticket volume/SLA performance report,"Aggregate view of ticket throughput vs SLA targets.",Medium,To Do,Reports & Management Dashboards
+Story,Agent performance report,"Tickets resolved/response time per agent.",Medium,To Do,Reports & Management Dashboards
+Story,Customer satisfaction (CSAT) tracking,"Post-resolution rating capture and rollup.",Low,To Do,Reports & Management Dashboards
+Story,Management dashboard,"Aggregated view combining the above reports.",Low,To Do,Reports & Management Dashboards
+Epic,AI Features,"Summaries, suggested replies, auto-categorization, chatbot.",Medium,To Do,
+Story,AI-generated ticket summaries,"Summarize long ticket threads for agents.",Medium,To Do,AI Features
+Story,AI-suggested replies,"Draft reply suggestions based on ticket content.",Medium,To Do,AI Features
+Story,Automatic ticket categorization,"Classify category/priority on creation.",Low,To Do,AI Features
+Story,AI chatbot on the customer portal,"First-line automated responses for customers.",Low,To Do,AI Features
+Epic,Additional Communication Channels,"WhatsApp, SMS, live chat as ticket sources.",Low,To Do,
+Story,WhatsApp inbound ticket creation,"Create tickets from WhatsApp Business API messages.",Low,To Do,Additional Communication Channels
+Story,SMS inbound ticket creation,"Create tickets from inbound SMS.",Low,To Do,Additional Communication Channels
+Story,Live chat widget,"Embeddable widget that creates/updates tickets in real time.",Low,To Do,Additional Communication Channels
+Epic,Odoo ERP Integration,"Wire this app into the company's Odoo ERP.",Medium,To Do,
+Story,Odoo API client (JSON-RPC),"Read-only res.partner client using a dedicated API user.",Medium,To Do,Odoo ERP Integration
+Story,One-way customer sync (Odoo to CRM),"Pull customers from Odoo as the source of truth.",Medium,To Do,Odoo ERP Integration
+Story,Push ticket summary to partner chatter,"Optional: post ticket summaries onto the Odoo partner record.",Low,To Do,Odoo ERP Integration
+Epic,Roles Permissions & Audit,"Beyond the agent/admin model.",Low,To Do,
+Story,Role model beyond agent/admin,"Introduce finer-grained roles as needed.",Low,To Do,Roles Permissions & Audit
+Story,Per-role permission checks on API routes,"Authorization middleware keyed on role.",Low,To Do,Roles Permissions & Audit
+Story,Audit log of sensitive actions,"Track who changed what, beyond ticket events.",Low,To Do,Roles Permissions & Audit
+Epic,Platform Multi-branch & Branding,"Multi-department/branch data model and custom branding.",Low,To Do,
+Story,Multi-department/multi-branch data model,"Scope customers/tickets by branch/department.",Low,To Do,Platform Multi-branch & Branding
+Story,Custom branding per tenant,"Logo/colors configurable per deployment.",Low,To Do,Platform Multi-branch & Branding

@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TicketCategory {
+  general
+  billing
+  technical
+  other
+}
+
+enum TicketPriority {
+  low
+  medium
+  high
+  urgent
+}
+
+enum TicketStatus {
+  open
+  in_progress
+  resolved
+  closed
+}
+
+enum TicketEventType {
+  created
+  status_changed
+  assigned
+  note_added
+}
+
+enum LeadStatus {
+  NEW       @map("new")
+  CONTACTED @map("contacted")
+  QUALIFIED @map("qualified")
+  LOST      @map("lost")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String
+  passwordHash String   @map("password_hash")
+  isAdmin      Boolean  @default(false) @map("is_admin")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  assignedTickets Ticket[]      @relation("AssignedAgent")
+  ticketEvents    TicketEvent[]
+  knowledgeArticles KnowledgeArticle[]
+
+  @@unique([email])
+  @@map("users")
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String?
+  phone     String?
+  company   String?
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tickets Ticket[]
+
+  @@map("customers")
+}
+
+model Ticket {
+  id              Int            @id @default(autoincrement())
+  subject         String
+  description     String?
+  category        TicketCategory @default(general)
+  priority        TicketPriority @default(medium)
+  status          TicketStatus   @default(open)
+  customerId      Int            @map("customer_id")
+  assignedAgentId Int?           @map("assigned_agent_id")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  customer      Customer      @relation(fields: [customerId], references: [id])
+  assignedAgent User?         @relation("AssignedAgent", fields: [assignedAgentId], references: [id])
+  events        TicketEvent[]
+
+  @@map("tickets")
+}
+
+model TicketEvent {
+  id          Int             @id @default(autoincrement())
+  ticketId    Int             @map("ticket_id")
+  eventType   TicketEventType @map("event_type")
+  detail      String?
+  actorUserId Int?            @map("actor_user_id")
+  createdAt   DateTime        @default(now()) @map("created_at")
+
+  ticket    Ticket @relation(fields: [ticketId], references: [id])
+  actorUser User?  @relation(fields: [actorUserId], references: [id])
+
+  @@map("ticket_events")
+}
+
+model Lead {
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String?
+  phone     String?
+  company   String?
+  source    String?
+  priority  TicketPriority @default(medium)
+  status    LeadStatus @default(NEW)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  @@map("leads")
+}
+
+model KnowledgeArticle {
+  id        Int      @id @default(autoincrement())
+  title     String
+  body      String
+  tags      String[]
+  createdBy Int      @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  author User @relation(fields: [createdBy], references: [id])
+
+  @@map("knowledge_articles")
+}

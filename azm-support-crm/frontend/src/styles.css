@@ -1,0 +1,190 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color-scheme: light;
+}
+
+html, body {
+  margin: 0;
+  background: #f4f5f7;
+  color: #1a1a1a;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #1f2937;
+  color: white;
+  flex-wrap: wrap;
+}
+
+.app-name {
+  font-weight: 600;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+}
+
+.nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+
+.nav a.active {
+  color: white;
+  font-weight: 600;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.content {
+  padding: 1.5rem;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.page-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.search {
+  padding: 0.5rem;
+  flex: 1;
+  min-width: 150px;
+}
+
+.inline-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  max-width: 500px;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th, .data-table td {
+  padding: 0.6rem;
+  text-align: start;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.login-page {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.ticket-detail dl {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 0.5rem 1rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.activity-log {
+  list-style: none;
+  padding: 0;
+  background: white;
+  border-radius: 8px;
+}
+
+.activity-log li {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.kb-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.kb-article {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.tag {
+  display: inline-block;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin-inline-end: 0.4rem;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+  }
+  .data-table, .data-table thead {
+    font-size: 0.85rem;
+  }
+  .ticket-detail dl {
+    grid-template-columns: 1fr;
+  }
+}
