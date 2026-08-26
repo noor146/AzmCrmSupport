@@ -1,0 +1,21 @@
+version: 1
+project:
+  name: crm
+  primaryLanguage: en
+  projectRoots:
+    - .
+tracker:
+  type: jira
+  workspace: nourhanali2910.atlassian.net
+naming:
+  includeTrackerId: true
+  globalSequence: true
+agents: []
+planner:
+  enabled: true
+  provider: anthropic
+  mode: auto
+  budget:
+    maxFileReads: 25
+    maxContextBytes: 50000
+    maxDurationSeconds: 180
