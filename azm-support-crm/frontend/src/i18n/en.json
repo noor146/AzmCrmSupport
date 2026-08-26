@@ -47,5 +47,7 @@
   "byStatus": "By status",
   "byPriority": "By priority",
   "recentTickets": "Recent tickets",
-  "welcomeBack": "Welcome back"
+  "welcomeBack": "Welcome back",
+  "kanbanView": "Board",
+  "listView": "List"
 }

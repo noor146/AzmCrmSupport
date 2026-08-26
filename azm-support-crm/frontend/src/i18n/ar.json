@@ -47,5 +47,7 @@
   "byStatus": "بحسب الحالة",
   "byPriority": "بحسب الأولوية",
   "recentTickets": "أحدث التذاكر",
-  "welcomeBack": "أهلاً بعودتك"
+  "welcomeBack": "أهلاً بعودتك",
+  "kanbanView": "لوحة",
+  "listView": "قائمة"
 }

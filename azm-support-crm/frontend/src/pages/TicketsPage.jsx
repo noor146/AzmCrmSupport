@@ -15,19 +15,21 @@ export default function TicketsPage() {
   const [customers, setCustomers] = useState([]);
   const [status, setStatus] = useState('');
   const [mine, setMine] = useState(false);
+  const [view, setView] = useState('kanban');
   const [showForm, setShowForm] = useState(false);
+  const [dragOverStatus, setDragOverStatus] = useState(null);
   const [form, setForm] = useState({ subject: '', description: '', category: 'general', priority: 'medium', customerId: '' });
 
   async function load() {
     const params = {};
-    if (status) params.status = status;
+    if (view === 'list' && status) params.status = status;
     if (mine) params.assigned_to = 'me';
     setTickets(await api.listTickets(token, params));
   }
 
   useEffect(() => {
     load();
-  }, [status, mine]);
+  }, [status, mine, view]);
 
   useEffect(() => {
     api.listCustomers(token).then(setCustomers);
@@ -41,15 +43,35 @@ export default function TicketsPage() {
     load();
   }
 
+  async function moveTicket(ticketId, newStatus) {
+    setTickets((prev) => prev.map((tk) => (tk.id === ticketId ? { ...tk, status: newStatus } : tk)));
+    await api.updateTicket(token, ticketId, { status: newStatus });
+    load();
+  }
+
+  function handleDrop(e, newStatus) {
+    e.preventDefault();
+    setDragOverStatus(null);
+    const ticketId = Number(e.dataTransfer.getData('text/ticket-id'));
+    const ticket = tickets.find((tk) => tk.id === ticketId);
+    if (ticket && ticket.status !== newStatus) moveTicket(ticketId, newStatus);
+  }
+
   return (
     <div>
       <div className="page-header">
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-          <option value="">{t('status')}: all</option>
-          {STATUSES.map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </select>
+        <div className="view-toggle">
+          <button className={view === 'kanban' ? 'active' : ''} onClick={() => setView('kanban')}>{t('kanbanView')}</button>
+          <button className={view === 'list' ? 'active' : ''} onClick={() => setView('list')}>{t('listView')}</button>
+        </div>
+        {view === 'list' && (
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
+            <option value="">{t('status')}: all</option>
+            {STATUSES.map((s) => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        )}
         <label>
           <input type="checkbox" checked={mine} onChange={(e) => setMine(e.target.checked)} />
           {t('myTickets')}
@@ -80,35 +102,75 @@ export default function TicketsPage() {
         </form>
       )}
 
-      <div className="table-wrap">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>{t('subject')}</th>
-              <th>{t('customer')}</th>
-              <th>{t('status')}</th>
-              <th>{t('priority')}</th>
-              <th>{t('assignedAgent')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tickets.map((ticket) => (
-              <tr key={ticket.id}>
-                <td><Link to={`/tickets/${ticket.id}`}>{ticket.subject}</Link></td>
-                <td>{ticket.customer?.name}</td>
-                <td>{ticket.status}</td>
-                <td>{ticket.priority}</td>
-                <td>{ticket.assignedAgent?.name ?? '-'}</td>
-              </tr>
-            ))}
-            {!tickets.length && (
+      {view === 'kanban' ? (
+        <div className="kanban-board">
+          {STATUSES.map((s) => {
+            const columnTickets = tickets.filter((tk) => tk.status === s);
+            return (
+              <div
+                key={s}
+                className={`kanban-column${dragOverStatus === s ? ' drag-over' : ''}`}
+                onDragOver={(e) => { e.preventDefault(); setDragOverStatus(s); }}
+                onDragLeave={() => setDragOverStatus((cur) => (cur === s ? null : cur))}
+                onDrop={(e) => handleDrop(e, s)}
+              >
+                <div className="kanban-column-head">
+                  <span>{s}</span>
+                  <span className="kanban-count">{columnTickets.length}</span>
+                </div>
+                <div className="kanban-cards">
+                  {columnTickets.map((ticket) => (
+                    <div
+                      key={ticket.id}
+                      className="kanban-card"
+                      draggable
+                      onDragStart={(e) => e.dataTransfer.setData('text/ticket-id', String(ticket.id))}
+                    >
+                      <Link to={`/tickets/${ticket.id}`}>{ticket.subject}</Link>
+                      <div className="kanban-card-meta">
+                        <span className={`priority-chip priority-${ticket.priority}`}>{ticket.priority}</span>
+                        <span className="muted">{ticket.customer?.name}</span>
+                      </div>
+                      <div className="kanban-card-agent muted">{ticket.assignedAgent?.name ?? '—'}</div>
+                    </div>
+                  ))}
+                  {!columnTickets.length && <p className="muted kanban-empty">{t('noResults')}</p>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="table-wrap">
+          <table className="data-table">
+            <thead>
               <tr>
-                <td colSpan={5}>{t('noResults')}</td>
+                <th>{t('subject')}</th>
+                <th>{t('customer')}</th>
+                <th>{t('status')}</th>
+                <th>{t('priority')}</th>
+                <th>{t('assignedAgent')}</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {tickets.map((ticket) => (
+                <tr key={ticket.id}>
+                  <td><Link to={`/tickets/${ticket.id}`}>{ticket.subject}</Link></td>
+                  <td>{ticket.customer?.name}</td>
+                  <td>{ticket.status}</td>
+                  <td>{ticket.priority}</td>
+                  <td>{ticket.assignedAgent?.name ?? '-'}</td>
+                </tr>
+              ))}
+              {!tickets.length && (
+                <tr>
+                  <td colSpan={5}>{t('noResults')}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
