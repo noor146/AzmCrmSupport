@@ -118,7 +118,20 @@ GET    /knowledge-base             ?q=            -- public
 POST   /knowledge-base
 PUT    /knowledge-base/:id
 DELETE /knowledge-base/:id
+
+GET    /leads                      ?source=&status=
+POST   /leads                      -- 409 + { error, duplicate } if email/phone already exists
+GET    /leads/:id
+PUT    /leads/:id
+DELETE /leads/:id
 ```
+
+Leads (KAN-1, tracked in `.squad/stories/init/KAN-1/`): manual lead capture
+with Name/Email/Phone/Company/Source/Priority/Status(NEW/CONTACTED/
+QUALIFIED/LOST), duplicate check by email OR phone on create, filter by
+source/status. Not part of the original PDF's 12 feature areas — added
+because it's a real Jira story (KAN project) for this CRM, separate from
+the AZM Squad eval task's scope.
 
 Every mutating endpoint returns the updated resource. Errors are
 `{ error: string }` with the matching 4xx/5xx status — no custom error
@@ -194,3 +207,11 @@ mid-task knows what's already done without re-reading the whole diff.
   (wrapped in `.table-wrap`). Local dev stack: backend on :4000, frontend on
   :5173, Postgres db `azm_support_crm`. Remaining MVP acceptance criteria
   (§9) are otherwise satisfied. Phase 2 backlog (§2) untouched.
+- 2026-08-26: Canonical location moved to
+  `/home/nourhan/odoo11-source/AzmCrmSupport/azm-support-crm` (squad-kit
+  workspace, tracker: Jira at nourhanali2910.atlassian.net, project key
+  KAN). The old `/home/nourhan/azm-support-crm` copy is now stale — treat
+  this location as source of truth. Implemented KAN-1 (Leads, see §6) and
+  smoke-tested create/duplicate-detect/filter via curl and the browser.
+  Added root `.gitignore` for `.squad/secrets.yaml` (contained live API
+  credentials, was unprotected/untracked before this commit).
