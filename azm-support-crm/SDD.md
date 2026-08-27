@@ -146,20 +146,35 @@ envelope.
 - Everything else in the PDF's "Platform" section (multi-branch, custom
   branding) is Phase 2 — do not build hooks for it now.
 
-## 8. Future Odoo ERP Integration (design only, not built in MVP)
+## 8. Odoo ERP Integration — built 2026-08-27
 
-When this app is wired into Odoo:
-- Treat Odoo as the ERP source of truth for **customers** (`res.partner`) and
-  this app as the source of truth for **tickets**. Sync direction: Odoo → CRM
-  one-way for customers (pull), CRM → Odoo optional push for ticket summaries
-  onto the partner's chatter (not decided further than this).
-- Integration transport: Odoo's JSON-RPC/XML-RPC `web/dataset/call_kw`, called
-  from a new `backend/src/integrations/odoo.ts` client — no changes to Odoo
-  itself required (no custom Odoo module) unless a dedicated REST endpoint is
-  requested later.
-- Auth: a dedicated Odoo API user with restricted `res.partner` read access.
-- Do not start this until MVP is demoed and the actual Odoo instance/version
-  to integrate against is confirmed.
+Implemented in `backend/src/integrations/odoo.ts` + `backend/src/routes/odoo.ts`.
+Talks to Odoo's `/jsonrpc` endpoint (`common.login`, `object.execute_kw`) —
+no extra npm package, no custom Odoo module required.
+
+- **Target instance (local dev):** Odoo 19, `http://localhost:8069`, db `crm`
+  (base + crm apps only, created for this purpose), user `admin`/`admin`.
+  Credentials live in `backend/.env` (gitignored), not committed.
+- **Customer → `res.partner`**: create-or-update by `Customer.odooPartnerId`.
+  Only name/email/phone/notes are mapped for now (no company→parent_id
+  linkage yet).
+- **Lead → `crm.lead`**: create-or-update by `Lead.odooLeadId`. Priority
+  mapped to Odoo's `0`/`1`/`2`/`3` scale; `source` goes into `description`
+  since we don't create/match `utm.source` records.
+- **Ticket → chatter note on the customer's `res.partner`**: this Odoo
+  instance has no helpdesk model installed, so a ticket sync posts a
+  plain-text summary via `message_post` on the linked partner instead of
+  creating a ticket record — the fallback this section originally proposed.
+  Customer is auto-synced first if it hasn't been yet.
+- **Sync is manual, not automatic-on-create**: each resource has its own
+  `POST /api/odoo/{customers,leads,tickets}/:id`, triggered by a "Sync to
+  Odoo" button in the UI. Deliberate — a flaky/slow Odoo call must never
+  block creating a ticket. `GET /api/odoo/status` backs a live connection
+  indicator on the Dashboard.
+- **Not done**: no pull direction (Odoo → CRM), no scheduled/automatic sync,
+  no conflict resolution if a record changes on both sides, no `utm.source`
+  matching, no company→partner hierarchy. Fine for a demo; would need
+  revisiting before this is a real production sync.
 
 ## 9. Acceptance criteria for MVP
 
@@ -215,3 +230,7 @@ mid-task knows what's already done without re-reading the whole diff.
   smoke-tested create/duplicate-detect/filter via curl and the browser.
   Added root `.gitignore` for `.squad/secrets.yaml` (contained live API
   credentials, was unprotected/untracked before this commit).
+- 2026-08-27: Added Dashboard, Kanban ticket board, live chat (widget +
+  agent inbox), a real design pass on buttons, and the Odoo integration
+  described in §8 — verified end-to-end against a local Odoo 19 instance.
+  Project documentation exported to `AZM_Support_CRM_Documentation.docx`.
