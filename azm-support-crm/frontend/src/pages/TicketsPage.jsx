@@ -81,23 +81,39 @@ export default function TicketsPage() {
 
       {showForm && (
         <form className="inline-form" onSubmit={handleSubmit}>
-          <input placeholder={t('subject')} required value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} />
-          <textarea placeholder={t('description')} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-          <select value={form.customerId} onChange={(e) => setForm({ ...form, customerId: e.target.value })} required>
-            <option value="">{t('customer')}</option>
-            {customers.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
-          <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
-            {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
-          <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })}>
-            {PRIORITIES.map((p) => <option key={p} value={p}>{p}</option>)}
-          </select>
-          <div>
-            <button type="submit" className="btn-primary">{t('save')}</button>
+          <p className="inline-form-title">{t('newTicket')}</p>
+          <label className="span-2">
+            <span>{t('subject')}</span>
+            <input required value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} />
+          </label>
+          <label className="span-2">
+            <span>{t('description')}</span>
+            <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          </label>
+          <label className="span-2">
+            <span>{t('customer')}</span>
+            <select value={form.customerId} onChange={(e) => setForm({ ...form, customerId: e.target.value })} required>
+              <option value="">{t('customer')}</option>
+              {customers.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span>{t('category')}</span>
+            <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>{t('priority')}</span>
+            <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })}>
+              {PRIORITIES.map((p) => <option key={p} value={p}>{p}</option>)}
+            </select>
+          </label>
+          <div className="inline-form-actions">
             <button type="button" onClick={() => setShowForm(false)}>{t('cancel')}</button>
+            <button type="submit" className="btn-primary">{t('save')}</button>
           </div>
         </form>
       )}

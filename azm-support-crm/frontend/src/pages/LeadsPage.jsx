@@ -70,17 +70,39 @@ export default function LeadsPage() {
 
       {showForm && (
         <form className="inline-form" onSubmit={handleSubmit}>
-          <input placeholder={t('name')} required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-          <input placeholder={t('email')} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-          <input placeholder={t('phone')} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-          <input placeholder={t('company')} value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
-          <input placeholder={t('source')} value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} />
-          <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })}>
-            {PRIORITIES.map((p) => <option key={p} value={p}>{p}</option>)}
-          </select>
-          <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}>
-            {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-          </select>
+          <p className="inline-form-title">{t('newLead')}</p>
+          <label>
+            <span>{t('name')}</span>
+            <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          </label>
+          <label>
+            <span>{t('email')}</span>
+            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          </label>
+          <label>
+            <span>{t('phone')}</span>
+            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+          </label>
+          <label>
+            <span>{t('company')}</span>
+            <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
+          </label>
+          <label>
+            <span>{t('source')}</span>
+            <input value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} />
+          </label>
+          <label>
+            <span>{t('priority')}</span>
+            <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })}>
+              {PRIORITIES.map((p) => <option key={p} value={p}>{p}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>{t('status')}</span>
+            <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}>
+              {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </label>
 
           {duplicate && (
             <p className="error">
@@ -88,9 +110,9 @@ export default function LeadsPage() {
             </p>
           )}
 
-          <div>
-            <button type="submit" className="btn-primary">{t('save')}</button>
+          <div className="inline-form-actions">
             <button type="button" onClick={() => setShowForm(false)}>{t('cancel')}</button>
+            <button type="submit" className="btn-primary">{t('save')}</button>
           </div>
         </form>
       )}

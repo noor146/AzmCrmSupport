@@ -53,14 +53,30 @@ export default function CustomersPage() {
 
       {showForm && (
         <form className="inline-form" onSubmit={handleSubmit}>
-          <input placeholder={t('name')} required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-          <input placeholder={t('email')} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-          <input placeholder={t('phone')} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-          <input placeholder={t('company')} value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
-          <textarea placeholder={t('notes')} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
-          <div>
-            <button type="submit" className="btn-primary">{t('save')}</button>
+          <p className="inline-form-title">{t('newCustomer')}</p>
+          <label>
+            <span>{t('name')}</span>
+            <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          </label>
+          <label>
+            <span>{t('email')}</span>
+            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          </label>
+          <label>
+            <span>{t('phone')}</span>
+            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+          </label>
+          <label>
+            <span>{t('company')}</span>
+            <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} />
+          </label>
+          <label className="span-2">
+            <span>{t('notes')}</span>
+            <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+          </label>
+          <div className="inline-form-actions">
             <button type="button" onClick={() => setShowForm(false)}>{t('cancel')}</button>
+            <button type="submit" className="btn-primary">{t('save')}</button>
           </div>
         </form>
       )}

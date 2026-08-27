@@ -44,12 +44,22 @@ export default function KnowledgeBasePage() {
 
       {showForm && (
         <form className="inline-form" onSubmit={handleSubmit}>
-          <input placeholder={t('title')} required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-          <textarea placeholder={t('body')} required value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
-          <input placeholder={t('tags')} value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
-          <div>
-            <button type="submit" className="btn-primary">{t('save')}</button>
+          <p className="inline-form-title">{t('newArticle')}</p>
+          <label className="span-2">
+            <span>{t('title')}</span>
+            <input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+          </label>
+          <label className="span-2">
+            <span>{t('body')}</span>
+            <textarea required value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
+          </label>
+          <label className="span-2">
+            <span>{t('tags')}</span>
+            <input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
+          </label>
+          <div className="inline-form-actions">
             <button type="button" onClick={() => setShowForm(false)}>{t('cancel')}</button>
+            <button type="submit" className="btn-primary">{t('save')}</button>
           </div>
         </form>
       )}
