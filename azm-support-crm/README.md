@@ -34,6 +34,19 @@ npm run dev             # http://localhost:5173
 
 Seeded login: `admin@azmsquad.com` / `password123`
 
+## Tests
+
+Backend has an automated Jest + Supertest suite against an isolated
+database (never the dev one):
+
+```bash
+psql -d postgres -c "CREATE DATABASE azm_support_crm_test;"
+cd backend
+cp .env.example .env.test   # edit DATABASE_URL to point at the _test db
+DATABASE_URL="<same URL as .env.test>" npx prisma migrate deploy
+npm test
+```
+
 ## Project layout
 
 ```
@@ -44,5 +57,5 @@ frontend/   -- React/Vite SPA
 
 ## Scripts
 
-- `backend`: `npm run dev` (watch mode), `npm run build && npm start` (prod), `npm run prisma:migrate`, `npm run prisma:seed`
+- `backend`: `npm run dev` (watch mode), `npm run build && npm start` (prod), `npm run prisma:migrate`, `npm run prisma:seed`, `npm test`
 - `frontend`: `npm run dev`, `npm run build`, `npm run preview`

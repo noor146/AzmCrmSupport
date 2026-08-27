@@ -237,3 +237,14 @@ mid-task knows what's already done without re-reading the whole diff.
   agent inbox), a real design pass on buttons, and the Odoo integration
   described in §8 — verified end-to-end against a local Odoo 19 instance.
   Project documentation exported to `AZM_Support_CRM_Documentation.docx`.
+- 2026-08-27: Redesigned the New Customer/Ticket/Lead/Article forms
+  (were unlabeled single-column placeholder inputs) and added a global
+  input/select/textarea style. Added a backend Jest+Supertest suite (25
+  tests, isolated `_test` db, see README "Tests") covering auth, CRUD,
+  duplicate-lead-detection, and the ticket event log. Writing it caught
+  two real bugs, both fixed: a type error in the chat status-update
+  route that `ts-node-dev --transpile-only` was silently skipping, and
+  an unvalidated `?status=`/`?priority=` query param on
+  tickets/leads/chat that crashed with a 500 + leaked stack trace on
+  any invalid value — added `src/lib/validateEnum.ts` plus a generic
+  Express error handler as defense-in-depth.
