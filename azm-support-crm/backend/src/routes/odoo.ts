@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth';
-import { checkOdooConnection, upsertPartner, upsertCrmLead, postTicketNoteOnPartner } from '../integrations/odoo';
+import { checkOdooConnection, upsertPartner, upsertCrmLead, upsertHelpdeskTicket } from '../integrations/odoo';
 
 export const odooRouter = Router();
 odooRouter.use(requireAuth);
@@ -59,10 +59,10 @@ odooRouter.post('/tickets/:id', async (req, res) => {
       });
     }
 
-    await postTicketNoteOnPartner(odooPartnerId, ticket);
+    const odooTicketId = await upsertHelpdeskTicket({ ...ticket, odooPartnerId });
     const updated = await prisma.ticket.update({
       where: { id: ticket.id },
-      data: { odooSyncedAt: new Date() },
+      data: { odooTicketId, odooSyncedAt: new Date() },
     });
     res.json(updated);
   } catch (err) {

@@ -109,25 +109,62 @@ export async function upsertCrmLead(lead: {
   return id;
 }
 
-// --- Tickets: no helpdesk app in this Odoo db, so we log a note on the
-// linked customer's partner chatter instead (the fallback documented in
-// SDD.md §8). ------------------------------------------------------------
+// --- helpdesk.ticket (Tickets) ------------------------------------------
+// The helpdesk app is now installed in the target db, so tickets sync as
+// real helpdesk.ticket records (superseding the partner-chatter-note
+// fallback SDD.md §8 originally described for when no helpdesk model
+// existed).
 
-export async function postTicketNoteOnPartner(odooPartnerId: number, ticket: {
+const STATUS_TO_STAGE_NAME: Record<string, string> = {
+  open: 'New',
+  in_progress: 'In Progress',
+  resolved: 'Solved',
+  closed: 'Solved',
+};
+
+let cachedTeamId: number | null = null;
+const stageIdByName = new Map<string, number>();
+
+async function getDefaultTeamId(): Promise<number | false> {
+  if (cachedTeamId) return cachedTeamId;
+  const teams = await executeKw('helpdesk.team', 'search_read', [[]], { fields: ['id'], limit: 1 });
+  cachedTeamId = teams[0]?.id ?? null;
+  return cachedTeamId ?? false;
+}
+
+async function getStageId(stageName: string): Promise<number | false> {
+  if (stageIdByName.has(stageName)) return stageIdByName.get(stageName)!;
+  const stages = await executeKw('helpdesk.stage', 'search_read', [[['name', '=', stageName]]], { fields: ['id'], limit: 1 });
+  const id = stages[0]?.id;
+  if (id) stageIdByName.set(stageName, id);
+  return id ?? false;
+}
+
+export async function upsertHelpdeskTicket(ticket: {
+  odooTicketId: number | null;
   id: number;
   subject: string;
+  description: string | null;
   status: string;
   priority: string;
-  description: string | null;
-}): Promise<void> {
-  const body = [
-    `[AZM Support] Ticket #${ticket.id}: ${ticket.subject}`,
-    `Status: ${ticket.status} · Priority: ${ticket.priority}`,
-    ticket.description || '',
-  ].filter(Boolean).join('\n');
+  odooPartnerId: number;
+}): Promise<number> {
+  const stageId = await getStageId(STATUS_TO_STAGE_NAME[ticket.status] ?? 'New');
 
-  await executeKw('res.partner', 'message_post', [[odooPartnerId]], {
-    body,
-    subject: `Ticket #${ticket.id}: ${ticket.subject}`,
-  });
+  const values: Record<string, unknown> = {
+    name: ticket.subject,
+    description: ticket.description || false,
+    partner_id: ticket.odooPartnerId,
+    priority: PRIORITY_TO_ODOO[ticket.priority] ?? '1',
+    stage_id: stageId,
+  };
+
+  if (ticket.odooTicketId) {
+    await executeKw('helpdesk.ticket', 'write', [[ticket.odooTicketId], values]);
+    return ticket.odooTicketId;
+  }
+
+  values.team_id = await getDefaultTeamId();
+  const [id] = await executeKw('helpdesk.ticket', 'create', [[values]]);
+  return id;
 }

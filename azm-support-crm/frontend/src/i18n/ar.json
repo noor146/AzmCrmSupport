@@ -63,6 +63,7 @@
   "publicHeroBody": "عندك سؤال عن طلبك أو حسابك؟ ابدأ محادثة مباشرة من الأسفل وسيرد عليك أحد ممثلي الدعم فورًا.",
   "odooSync": "مزامنة Odoo",
   "syncToOdoo": "مزامنة مع Odoo",
+  "resyncToOdoo": "إعادة المزامنة مع Odoo",
   "synced": "متزامن",
   "odooConnection": "اتصال Odoo"
 }

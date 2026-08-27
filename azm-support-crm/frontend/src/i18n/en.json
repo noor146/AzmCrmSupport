@@ -63,6 +63,7 @@
   "publicHeroBody": "Have a question about your order or account? Start a live chat in the corner and an agent will be right with you.",
   "odooSync": "Odoo Sync",
   "syncToOdoo": "Sync to Odoo",
+  "resyncToOdoo": "Re-sync to Odoo",
   "synced": "Synced",
   "odooConnection": "Odoo connection"
 }

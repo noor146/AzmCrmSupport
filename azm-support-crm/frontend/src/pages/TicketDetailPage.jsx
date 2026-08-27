@@ -58,12 +58,11 @@ export default function TicketDetailPage() {
         <dt>{t('assignedAgent')}</dt>
         <dd>{ticket.assignedAgent?.name ?? '-'}</dd>
         <dt>{t('odooSync')}</dt>
-        <dd>
-          {ticket.odooSyncedAt ? (
-            <span className="status-chip done">{t('synced')} ({new Date(ticket.odooSyncedAt).toLocaleString()})</span>
-          ) : (
-            <button onClick={handleSyncOdoo}>{t('syncToOdoo')}</button>
+        <dd className="odoo-sync-cell">
+          {ticket.odooTicketId && (
+            <span className="status-chip done">{t('synced')} #{ticket.odooTicketId}</span>
           )}
+          <button onClick={handleSyncOdoo}>{ticket.odooTicketId ? t('resyncToOdoo') : t('syncToOdoo')}</button>
         </dd>
       </dl>
 

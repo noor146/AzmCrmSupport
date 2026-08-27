@@ -416,6 +416,13 @@ html, body {
   border-radius: 8px;
 }
 
+.odoo-sync-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
 .activity-log {
   list-style: none;
   padding: 0;
