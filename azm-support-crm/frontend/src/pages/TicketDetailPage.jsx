@@ -31,6 +31,11 @@ export default function TicketDetailPage() {
     navigate('/tickets');
   }
 
+  async function handleSyncOdoo() {
+    await api.syncTicketToOdoo(token, id);
+    load();
+  }
+
   if (!ticket) return <p>{t('loading')}</p>;
 
   return (
@@ -52,6 +57,14 @@ export default function TicketDetailPage() {
         </dd>
         <dt>{t('assignedAgent')}</dt>
         <dd>{ticket.assignedAgent?.name ?? '-'}</dd>
+        <dt>{t('odooSync')}</dt>
+        <dd>
+          {ticket.odooSyncedAt ? (
+            <span className="status-chip done">{t('synced')} ({new Date(ticket.odooSyncedAt).toLocaleString()})</span>
+          ) : (
+            <button onClick={handleSyncOdoo}>{t('syncToOdoo')}</button>
+          )}
+        </dd>
       </dl>
 
       <h3>{t('activity')}</h3>

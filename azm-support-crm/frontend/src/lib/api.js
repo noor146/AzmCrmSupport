@@ -46,6 +46,11 @@ export const api = {
 
   getDashboard: (token) => request('/dashboard', { token }),
 
+  getOdooStatus: (token) => request('/odoo/status', { token }),
+  syncCustomerToOdoo: (token, id) => request(`/odoo/customers/${id}`, { method: 'POST', token }),
+  syncLeadToOdoo: (token, id) => request(`/odoo/leads/${id}`, { method: 'POST', token }),
+  syncTicketToOdoo: (token, id) => request(`/odoo/tickets/${id}`, { method: 'POST', token }),
+
   startConversation: (data) => request('/chat/conversations', { method: 'POST', body: data }),
   sendVisitorMessage: (conversationId, body) =>
     request(`/chat/conversations/${conversationId}/messages`, { method: 'POST', body: { body } }),

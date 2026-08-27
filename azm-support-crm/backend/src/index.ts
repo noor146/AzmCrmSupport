@@ -8,6 +8,7 @@ import { knowledgeBaseRouter } from './routes/knowledgeBase';
 import { leadsRouter } from './routes/leads';
 import { dashboardRouter } from './routes/dashboard';
 import { chatRouter } from './routes/chat';
+import { odooRouter } from './routes/odoo';
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,7 @@ app.use('/api/knowledge-base', knowledgeBaseRouter);
 app.use('/api/leads', leadsRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/chat', chatRouter);
+app.use('/api/odoo', odooRouter);
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 

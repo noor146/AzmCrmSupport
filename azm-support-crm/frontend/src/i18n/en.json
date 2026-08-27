@@ -60,5 +60,9 @@
   "closeConversation": "Close conversation",
   "conversationClosed": "This conversation is closed.",
   "publicHeroTitle": "We're here to help.",
-  "publicHeroBody": "Have a question about your order or account? Start a live chat in the corner and an agent will be right with you."
+  "publicHeroBody": "Have a question about your order or account? Start a live chat in the corner and an agent will be right with you.",
+  "odooSync": "Odoo Sync",
+  "syncToOdoo": "Sync to Odoo",
+  "synced": "Synced",
+  "odooConnection": "Odoo connection"
 }

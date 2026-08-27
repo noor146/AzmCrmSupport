@@ -60,5 +60,9 @@
   "closeConversation": "إغلاق المحادثة",
   "conversationClosed": "هذه المحادثة مغلقة.",
   "publicHeroTitle": "نحن هنا للمساعدة.",
-  "publicHeroBody": "عندك سؤال عن طلبك أو حسابك؟ ابدأ محادثة مباشرة من الأسفل وسيرد عليك أحد ممثلي الدعم فورًا."
+  "publicHeroBody": "عندك سؤال عن طلبك أو حسابك؟ ابدأ محادثة مباشرة من الأسفل وسيرد عليك أحد ممثلي الدعم فورًا.",
+  "odooSync": "مزامنة Odoo",
+  "syncToOdoo": "مزامنة مع Odoo",
+  "synced": "متزامن",
+  "odooConnection": "اتصال Odoo"
 }

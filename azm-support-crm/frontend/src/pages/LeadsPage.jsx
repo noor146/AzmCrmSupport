@@ -50,6 +50,11 @@ export default function LeadsPage() {
     load();
   }
 
+  async function handleSyncOdoo(id) {
+    await api.syncLeadToOdoo(token, id);
+    load();
+  }
+
   return (
     <div>
       <div className="page-header">
@@ -100,6 +105,7 @@ export default function LeadsPage() {
               <th>{t('source')}</th>
               <th>{t('priority')}</th>
               <th>{t('status')}</th>
+              <th>{t('odooSync')}</th>
               <th></th>
             </tr>
           </thead>
@@ -113,13 +119,20 @@ export default function LeadsPage() {
                 <td>{lead.priority}</td>
                 <td>{lead.status}</td>
                 <td>
+                  {lead.odooLeadId ? (
+                    <span className="status-chip done">{t('synced')} #{lead.odooLeadId}</span>
+                  ) : (
+                    <button onClick={() => handleSyncOdoo(lead.id)}>{t('syncToOdoo')}</button>
+                  )}
+                </td>
+                <td>
                   <button className="btn-danger" onClick={() => handleDelete(lead.id)}>{t('delete')}</button>
                 </td>
               </tr>
             ))}
             {!leads.length && (
               <tr>
-                <td colSpan={7}>{t('noResults')}</td>
+                <td colSpan={8}>{t('noResults')}</td>
               </tr>
             )}
           </tbody>

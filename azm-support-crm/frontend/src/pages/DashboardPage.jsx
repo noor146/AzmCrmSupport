@@ -27,9 +27,11 @@ export default function DashboardPage() {
   const { token, user } = useAuth();
   const { t } = useI18n();
   const [data, setData] = useState(null);
+  const [odooStatus, setOdooStatus] = useState(null);
 
   useEffect(() => {
     api.getDashboard(token).then(setData);
+    api.getOdooStatus(token).then(setOdooStatus).catch(() => setOdooStatus({ connected: false }));
   }, []);
 
   if (!data) return <p>{t('loading')}</p>;
@@ -38,6 +40,11 @@ export default function DashboardPage() {
     <div>
       <div className="page-header">
         <h2 className="dashboard-greeting">{t('welcomeBack')}, {user?.name}</h2>
+        {odooStatus && (
+          <span className={`status-chip ${odooStatus.connected ? 'done' : 'todo'}`}>
+            {t('odooConnection')}: {odooStatus.connected ? t('synced') : '—'}
+          </span>
+        )}
       </div>
 
       <div className="dashboard-kpis">

@@ -34,6 +34,11 @@ export default function CustomersPage() {
     load();
   }
 
+  async function handleSyncOdoo(id) {
+    await api.syncCustomerToOdoo(token, id);
+    load();
+  }
+
   return (
     <div>
       <div className="page-header">
@@ -68,6 +73,7 @@ export default function CustomersPage() {
               <th>{t('email')}</th>
               <th>{t('phone')}</th>
               <th>{t('company')}</th>
+              <th>{t('odooSync')}</th>
               <th></th>
             </tr>
           </thead>
@@ -79,13 +85,20 @@ export default function CustomersPage() {
                 <td>{c.phone}</td>
                 <td>{c.company}</td>
                 <td>
+                  {c.odooPartnerId ? (
+                    <span className="status-chip done">{t('synced')} #{c.odooPartnerId}</span>
+                  ) : (
+                    <button onClick={() => handleSyncOdoo(c.id)}>{t('syncToOdoo')}</button>
+                  )}
+                </td>
+                <td>
                   <button className="btn-danger" onClick={() => handleDelete(c.id)}>{t('delete')}</button>
                 </td>
               </tr>
             ))}
             {!customers.length && (
               <tr>
-                <td colSpan={5}>{t('noResults')}</td>
+                <td colSpan={6}>{t('noResults')}</td>
               </tr>
             )}
           </tbody>
