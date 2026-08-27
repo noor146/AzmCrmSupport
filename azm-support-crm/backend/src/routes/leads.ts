@@ -1,16 +1,23 @@
 import { Router } from 'express';
+import { LeadStatus } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth';
+import { parseEnumQueryParam, INVALID } from '../lib/validateEnum';
 
 export const leadsRouter = Router();
 leadsRouter.use(requireAuth);
 
+const STATUSES = Object.values(LeadStatus);
+
 leadsRouter.get('/', async (req, res) => {
-  const { source, status } = req.query;
+  const { source } = req.query;
+  const status = parseEnumQueryParam(res, 'status', req.query.status, STATUSES);
+  if (status === INVALID) return;
+
   const leads = await prisma.lead.findMany({
     where: {
       source: source ? String(source) : undefined,
-      status: status ? (String(status) as any) : undefined,
+      status,
     },
     orderBy: { createdAt: 'desc' },
   });

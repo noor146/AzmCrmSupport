@@ -1,10 +1,13 @@
 import { Router } from 'express';
+import { ConversationStatus } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { requireAuth, AuthedRequest } from '../middleware/auth';
+import { parseEnumQueryParam, INVALID } from '../lib/validateEnum';
 
 export const chatRouter = Router();
 
 const agentSelect = { id: true, name: true } as const;
+const STATUSES = Object.values(ConversationStatus);
 
 // --- Public widget endpoints (no auth: this is the visitor-facing side) ---
 
@@ -46,9 +49,12 @@ chatRouter.post('/conversations/:id/messages', async (req, res) => {
 // --- Agent-facing endpoints (auth required) ---
 
 chatRouter.get('/agent/conversations', requireAuth, async (req, res) => {
-  const { status } = req.query;
+  const rawStatus = req.query.status ? String(req.query.status).toUpperCase() : undefined;
+  const status = parseEnumQueryParam(res, 'status', rawStatus, STATUSES);
+  if (status === INVALID) return;
+
   const conversations = await prisma.conversation.findMany({
-    where: { status: status ? (String(status).toUpperCase() as any) : undefined },
+    where: { status },
     orderBy: { updatedAt: 'desc' },
     include: { messages: { orderBy: { createdAt: 'desc' }, take: 1 } },
   });
@@ -82,10 +88,19 @@ chatRouter.post('/agent/conversations/:id/messages', requireAuth, async (req: Au
 
 chatRouter.put('/agent/conversations/:id', requireAuth, async (req, res) => {
   const { status } = req.body ?? {};
+  let normalizedStatus: ConversationStatus | undefined;
+  if (status !== undefined) {
+    const upper = String(status).toUpperCase();
+    if (upper !== 'OPEN' && upper !== 'CLOSED') {
+      return res.status(400).json({ error: 'status must be "open" or "closed"' });
+    }
+    normalizedStatus = upper;
+  }
+
   try {
     const conversation = await prisma.conversation.update({
       where: { id: Number(req.params.id) },
-      data: { status: status ? String(status).toUpperCase() : undefined },
+      data: { status: normalizedStatus },
     });
     res.json(conversation);
   } catch {

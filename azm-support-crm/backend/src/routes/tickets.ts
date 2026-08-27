@@ -1,18 +1,27 @@
 import { Router } from 'express';
+import { TicketStatus, TicketPriority } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { requireAuth, AuthedRequest } from '../middleware/auth';
+import { parseEnumQueryParam, INVALID } from '../lib/validateEnum';
 
 export const ticketsRouter = Router();
 ticketsRouter.use(requireAuth);
 
 const agentSelect = { id: true, name: true, email: true, isAdmin: true } as const;
+const STATUSES = Object.values(TicketStatus);
+const PRIORITIES = Object.values(TicketPriority);
 
 ticketsRouter.get('/', async (req: AuthedRequest, res) => {
-  const { status, priority, assigned_to } = req.query;
+  const { assigned_to } = req.query;
+  const status = parseEnumQueryParam(res, 'status', req.query.status, STATUSES);
+  if (status === INVALID) return;
+  const priority = parseEnumQueryParam(res, 'priority', req.query.priority, PRIORITIES);
+  if (priority === INVALID) return;
+
   const tickets = await prisma.ticket.findMany({
     where: {
-      status: status ? (String(status) as any) : undefined,
-      priority: priority ? (String(priority) as any) : undefined,
+      status,
+      priority,
       assignedAgentId: assigned_to === 'me' ? req.user!.id : undefined,
     },
     include: { customer: true, assignedAgent: { select: agentSelect } },
