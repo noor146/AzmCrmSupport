@@ -161,11 +161,14 @@ no extra npm package, no custom Odoo module required.
 - **Lead → `crm.lead`**: create-or-update by `Lead.odooLeadId`. Priority
   mapped to Odoo's `0`/`1`/`2`/`3` scale; `source` goes into `description`
   since we don't create/match `utm.source` records.
-- **Ticket → chatter note on the customer's `res.partner`**: this Odoo
-  instance has no helpdesk model installed, so a ticket sync posts a
-  plain-text summary via `message_post` on the linked partner instead of
-  creating a ticket record — the fallback this section originally proposed.
-  Customer is auto-synced first if it hasn't been yet.
+- **Ticket → `helpdesk.ticket`**: create-or-update by `Ticket.odooTicketId`,
+  linked to the customer's `res.partner` (auto-synced first if it hasn't
+  been yet). Status mapped to a stage by name (open→New, in_progress→In
+  Progress, resolved/closed→Solved); team is whatever `helpdesk.team`
+  comes back first from the db (only one, "Customer Care", exists in this
+  instance). Originally this fell back to a plain chatter note on the
+  partner because the target db had no helpdesk model — the Helpdesk app
+  was installed on 2026-08-27, so tickets sync as real records now.
 - **Sync is manual, not automatic-on-create**: each resource has its own
   `POST /api/odoo/{customers,leads,tickets}/:id`, triggered by a "Sync to
   Odoo" button in the UI. Deliberate — a flaky/slow Odoo call must never
