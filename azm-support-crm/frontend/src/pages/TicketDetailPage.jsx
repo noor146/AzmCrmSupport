@@ -40,12 +40,15 @@ export default function TicketDetailPage() {
 
   const isOpenState = ['open', 'in_progress'].includes(ticket.status);
   const resolutionOverdue = isOpenState && ticket.slaResolutionDueAt && new Date(ticket.slaResolutionDueAt) < new Date();
+  const requestedOverdue = isOpenState && ticket.customerRequestedBy && new Date(ticket.customerRequestedBy) < new Date();
 
   return (
     <div className="ticket-detail">
       <h2>{ticket.subject}</h2>
       <p>{ticket.description}</p>
       <dl>
+        <dt>{t('createdOn')}</dt>
+        <dd>{new Date(ticket.createdAt).toLocaleString()}</dd>
         <dt>{t('customer')}</dt>
         <dd>{ticket.customer?.name}</dd>
         <dt>{t('category')}</dt>
@@ -63,6 +66,11 @@ export default function TicketDetailPage() {
         </dd>
         <dt>{t('assignedAgent')}</dt>
         <dd>{ticket.assignedAgent?.name ?? '-'}</dd>
+        <dt>{t('customerRequestedBy')}</dt>
+        <dd>
+          {ticket.customerRequestedBy ? new Date(ticket.customerRequestedBy).toLocaleString() : t('notSpecified')}
+          {requestedOverdue && <span className="status-chip todo sla-inline-badge">{t('overdue')}</span>}
+        </dd>
         <dt>{t('slaResolutionDue')}</dt>
         <dd>
           {ticket.slaResolutionDueAt ? new Date(ticket.slaResolutionDueAt).toLocaleString() : '-'}

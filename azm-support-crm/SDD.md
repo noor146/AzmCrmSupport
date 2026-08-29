@@ -347,3 +347,12 @@ mid-task knows what's already done without re-reading the whole diff.
   the dashboard button: priority bumped medium→high, activity log got the
   new `escalated` event, both badges rendered. Full test suite: 44/44
   passing.
+- 2026-08-29: Added `Ticket.customerRequestedBy` — an optional date the
+  customer (or an agent on their behalf) sets on creation, deliberately
+  separate from `slaResolutionDueAt` (the system-computed target from
+  priority). The two are independent by design: a customer can ask for
+  something sooner or later than the standard SLA, and neither field
+  overrides the other. Also surfaced `createdAt` on the ticket detail
+  page (agent and portal), which had never actually been shown despite
+  always being in the data — a real gap the user caught. Full test
+  suite: 48/48 passing.

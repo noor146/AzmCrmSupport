@@ -11,7 +11,7 @@ export default function PortalDashboardPage() {
   const { t } = useI18n();
   const [tickets, setTickets] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ subject: '', description: '', category: 'general' });
+  const [form, setForm] = useState({ subject: '', description: '', category: 'general', customerRequestedBy: '' });
 
   async function load() {
     setTickets(await api.portalListTickets(token));
@@ -23,8 +23,8 @@ export default function PortalDashboardPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await api.portalCreateTicket(token, form);
-    setForm({ subject: '', description: '', category: 'general' });
+    await api.portalCreateTicket(token, { ...form, customerRequestedBy: form.customerRequestedBy || undefined });
+    setForm({ subject: '', description: '', category: 'general', customerRequestedBy: '' });
     setShowForm(false);
     load();
   }
@@ -52,6 +52,10 @@ export default function PortalDashboardPage() {
             <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
               {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
+          </label>
+          <label>
+            <span>{t('customerRequestedByPortal')}</span>
+            <input type="datetime-local" value={form.customerRequestedBy} onChange={(e) => setForm({ ...form, customerRequestedBy: e.target.value })} />
           </label>
           <div className="inline-form-actions">
             <button type="button" onClick={() => setShowForm(false)}>{t('cancel')}</button>

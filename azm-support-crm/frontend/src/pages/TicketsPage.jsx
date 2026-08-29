@@ -18,7 +18,7 @@ export default function TicketsPage() {
   const [view, setView] = useState('kanban');
   const [showForm, setShowForm] = useState(false);
   const [dragOverStatus, setDragOverStatus] = useState(null);
-  const [form, setForm] = useState({ subject: '', description: '', category: 'general', priority: 'medium', customerId: '' });
+  const [form, setForm] = useState({ subject: '', description: '', category: 'general', priority: 'medium', customerId: '', customerRequestedBy: '' });
 
   async function load() {
     const params = {};
@@ -37,9 +37,9 @@ export default function TicketsPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await api.createTicket(token, form);
+    await api.createTicket(token, { ...form, customerRequestedBy: form.customerRequestedBy || undefined });
     setShowForm(false);
-    setForm({ subject: '', description: '', category: 'general', priority: 'medium', customerId: '' });
+    setForm({ subject: '', description: '', category: 'general', priority: 'medium', customerId: '', customerRequestedBy: '' });
     load();
   }
 
@@ -111,6 +111,10 @@ export default function TicketsPage() {
               {PRIORITIES.map((p) => <option key={p} value={p}>{p}</option>)}
             </select>
           </label>
+          <label>
+            <span>{t('customerRequestedBy')}</span>
+            <input type="datetime-local" value={form.customerRequestedBy} onChange={(e) => setForm({ ...form, customerRequestedBy: e.target.value })} />
+          </label>
           <div className="inline-form-actions">
             <button type="button" onClick={() => setShowForm(false)}>{t('cancel')}</button>
             <button type="submit" className="btn-primary">{t('save')}</button>
@@ -166,6 +170,7 @@ export default function TicketsPage() {
                 <th>{t('status')}</th>
                 <th>{t('priority')}</th>
                 <th>{t('assignedAgent')}</th>
+                <th>{t('createdOn')}</th>
               </tr>
             </thead>
             <tbody>
@@ -176,11 +181,12 @@ export default function TicketsPage() {
                   <td>{ticket.status}</td>
                   <td>{ticket.priority}</td>
                   <td>{ticket.assignedAgent?.name ?? '-'}</td>
+                  <td>{new Date(ticket.createdAt).toLocaleDateString()}</td>
                 </tr>
               ))}
               {!tickets.length && (
                 <tr>
-                  <td colSpan={5}>{t('noResults')}</td>
+                  <td colSpan={6}>{t('noResults')}</td>
                 </tr>
               )}
             </tbody>

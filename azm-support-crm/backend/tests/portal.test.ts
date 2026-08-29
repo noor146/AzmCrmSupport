@@ -65,6 +65,25 @@ describe('Customer portal: signup, login, and ticket scoping', () => {
     expect(res.status).toBe(403);
   });
 
+  it('lets a customer specify when they need a ticket resolved by', async () => {
+    const loginA = await request(app).post('/api/portal/login').send({ email: emailA, password: 'hunter2pass' });
+    const requestedBy = new Date(Date.now() + 3 * 60 * 60_000).toISOString();
+
+    const create = await request(app)
+      .post('/api/portal/tickets')
+      .set('Authorization', `Bearer ${loginA.body.token}`)
+      .send({ subject: 'Need this by tonight', customerRequestedBy: requestedBy });
+    expect(create.status).toBe(201);
+    ticketIds.push(create.body.id);
+    expect(new Date(create.body.customerRequestedBy).getTime()).toBe(new Date(requestedBy).getTime());
+
+    const bad = await request(app)
+      .post('/api/portal/tickets')
+      .set('Authorization', `Bearer ${loginA.body.token}`)
+      .send({ subject: 'Bad date', customerRequestedBy: 'nope' });
+    expect(bad.status).toBe(400);
+  });
+
   it('lets a customer create and list only their own tickets', async () => {
     const loginA = await request(app).post('/api/portal/login').send({ email: emailA, password: 'hunter2pass' });
     const tokenA = loginA.body.token;

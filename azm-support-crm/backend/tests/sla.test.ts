@@ -58,6 +58,40 @@ describe('SLA targets and auto-assignment on ticket creation', () => {
     expect(res.body.slaResolutionDueAt).toBeTruthy();
   });
 
+  it('stores an optional customer-requested resolution date, distinct from the computed SLA target', async () => {
+    const requestedBy = new Date(Date.now() + 2 * 60 * 60_000).toISOString(); // 2h from now
+    const res = await request(app)
+      .post('/api/tickets')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ subject: 'Customer wants it fast', customerId, priority: 'low', customerRequestedBy: requestedBy });
+    expect(res.status).toBe(201);
+    ticketIds.push(res.body.id);
+
+    expect(new Date(res.body.customerRequestedBy).getTime()).toBe(new Date(requestedBy).getTime());
+    // The customer's ask (2h) is far sooner than the low-priority SLA
+    // target (72h) - the two fields are independent, neither overrides
+    // the other.
+    expect(new Date(res.body.customerRequestedBy).getTime()).toBeLessThan(new Date(res.body.slaResolutionDueAt).getTime());
+  });
+
+  it('rejects an unparseable customerRequestedBy as 400', async () => {
+    const res = await request(app)
+      .post('/api/tickets')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ subject: 'Bad date', customerId, customerRequestedBy: 'not-a-date' });
+    expect(res.status).toBe(400);
+  });
+
+  it('leaves customerRequestedBy null when not provided', async () => {
+    const res = await request(app)
+      .post('/api/tickets')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ subject: 'No date given', customerId });
+    expect(res.status).toBe(201);
+    ticketIds.push(res.body.id);
+    expect(res.body.customerRequestedBy).toBeNull();
+  });
+
   it('auto-assigns an agent when none is given, and logs it as an event', async () => {
     const res = await request(app)
       .post('/api/tickets')

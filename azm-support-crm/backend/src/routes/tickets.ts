@@ -33,9 +33,17 @@ ticketsRouter.get('/', async (req: AuthedRequest, res) => {
 });
 
 ticketsRouter.post('/', async (req: AuthedRequest, res) => {
-  const { subject, description, category, priority, customerId, assignedAgentId } = req.body ?? {};
+  const { subject, description, category, priority, customerId, assignedAgentId, customerRequestedBy } = req.body ?? {};
   if (!subject || !customerId) {
     return res.status(400).json({ error: 'subject and customerId are required' });
+  }
+
+  let requestedByDate: Date | undefined;
+  if (customerRequestedBy) {
+    requestedByDate = new Date(customerRequestedBy);
+    if (Number.isNaN(requestedByDate.getTime())) {
+      return res.status(400).json({ error: 'customerRequestedBy must be a valid date' });
+    }
   }
 
   const effectivePriority = priority ?? 'medium';
@@ -55,6 +63,7 @@ ticketsRouter.post('/', async (req: AuthedRequest, res) => {
       assignedAgentId: autoAgentId ?? undefined,
       slaResponseDueAt,
       slaResolutionDueAt,
+      customerRequestedBy: requestedByDate,
     },
   });
 

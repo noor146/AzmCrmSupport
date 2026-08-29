@@ -76,13 +76,21 @@ portalRouter.get('/tickets', async (req: AuthedRequest, res) => {
 });
 
 portalRouter.post('/tickets', async (req: AuthedRequest, res) => {
-  const { subject, description, category, priority } = req.body ?? {};
+  const { subject, description, category, priority, customerRequestedBy } = req.body ?? {};
   if (!subject) return res.status(400).json({ error: 'subject is required' });
   if (category && !CATEGORIES.includes(category)) {
     return res.status(400).json({ error: `category must be one of: ${CATEGORIES.join(', ')}` });
   }
   if (priority && !PRIORITIES.includes(priority)) {
     return res.status(400).json({ error: `priority must be one of: ${PRIORITIES.join(', ')}` });
+  }
+
+  let requestedByDate: Date | undefined;
+  if (customerRequestedBy) {
+    requestedByDate = new Date(customerRequestedBy);
+    if (Number.isNaN(requestedByDate.getTime())) {
+      return res.status(400).json({ error: 'customerRequestedBy must be a valid date' });
+    }
   }
 
   const effectivePriority = priority ?? 'medium';
@@ -102,6 +110,7 @@ portalRouter.post('/tickets', async (req: AuthedRequest, res) => {
       assignedAgentId: autoAgentId ?? undefined,
       slaResponseDueAt,
       slaResolutionDueAt,
+      customerRequestedBy: requestedByDate,
     },
   });
 

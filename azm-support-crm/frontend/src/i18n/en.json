@@ -82,5 +82,8 @@
   "runSlaCheck": "Run SLA check",
   "slaCheckResultPrefix": "SLA check ran:",
   "slaCheckResultChecked": "tickets checked",
-  "slaCheckResultEscalated": "escalated"
+  "slaCheckResultEscalated": "escalated",
+  "customerRequestedBy": "Customer requested resolution by",
+  "customerRequestedByPortal": "When do you need this resolved by? (optional)",
+  "notSpecified": "Not specified"
 }

@@ -82,5 +82,8 @@
   "runSlaCheck": "تشغيل فحص SLA",
   "slaCheckResultPrefix": "نتيجة فحص SLA:",
   "slaCheckResultChecked": "تذكرة تم فحصها",
-  "slaCheckResultEscalated": "تم تصعيدها"
+  "slaCheckResultEscalated": "تم تصعيدها",
+  "customerRequestedBy": "الموعد اللي طلب العميل تتحل بحلوله",
+  "customerRequestedByPortal": "محتاج تتحل بحلول إمتى؟ (اختياري)",
+  "notSpecified": "غير محدد"
 }

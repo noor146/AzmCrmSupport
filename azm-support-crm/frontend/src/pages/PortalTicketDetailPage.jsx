@@ -21,6 +21,8 @@ export default function PortalTicketDetailPage() {
       <h2>{ticket.subject}</h2>
       <p>{ticket.description}</p>
       <dl>
+        <dt>{t('createdOn')}</dt>
+        <dd>{new Date(ticket.createdAt).toLocaleString()}</dd>
         <dt>{t('category')}</dt>
         <dd>{ticket.category}</dd>
         <dt>{t('priority')}</dt>
@@ -29,6 +31,10 @@ export default function PortalTicketDetailPage() {
         <dd>{ticket.status}</dd>
         <dt>{t('assignedAgent')}</dt>
         <dd>{ticket.assignedAgent?.name ?? '-'}</dd>
+        <dt>{t('customerRequestedBy')}</dt>
+        <dd>{ticket.customerRequestedBy ? new Date(ticket.customerRequestedBy).toLocaleString() : t('notSpecified')}</dd>
+        <dt>{t('slaResolutionDue')}</dt>
+        <dd>{ticket.slaResolutionDueAt ? new Date(ticket.slaResolutionDueAt).toLocaleString() : '-'}</dd>
       </dl>
 
       <h3>{t('activity')}</h3>
