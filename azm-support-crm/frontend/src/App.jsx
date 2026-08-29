@@ -9,11 +9,22 @@ import LeadsPage from './pages/LeadsPage';
 import DashboardPage from './pages/DashboardPage';
 import LiveChatPage from './pages/LiveChatPage';
 import PublicSupportPage from './pages/PublicSupportPage';
+import PortalLayout from './components/PortalLayout';
+import PortalLoginPage from './pages/PortalLoginPage';
+import PortalSignupPage from './pages/PortalSignupPage';
+import PortalDashboardPage from './pages/PortalDashboardPage';
+import PortalTicketDetailPage from './pages/PortalTicketDetailPage';
 import { useAuth } from './lib/auth';
+import { usePortalAuth } from './lib/portalAuth';
 
 function RequireAuth({ children }) {
   const { token } = useAuth();
   return token ? children : <Navigate to="/login" replace />;
+}
+
+function RequirePortalAuth({ children }) {
+  const { token } = usePortalAuth();
+  return token ? children : <Navigate to="/portal/login" replace />;
 }
 
 export default function App() {
@@ -21,6 +32,20 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/support" element={<PublicSupportPage />} />
+
+      <Route path="/portal/login" element={<PortalLoginPage />} />
+      <Route path="/portal/signup" element={<PortalSignupPage />} />
+      <Route
+        path="/portal"
+        element={
+          <RequirePortalAuth>
+            <PortalLayout />
+          </RequirePortalAuth>
+        }
+      >
+        <Route index element={<PortalDashboardPage />} />
+        <Route path="tickets/:id" element={<PortalTicketDetailPage />} />
+      </Route>
       <Route
         path="/"
         element={

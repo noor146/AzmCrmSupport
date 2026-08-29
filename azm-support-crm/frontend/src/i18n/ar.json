@@ -65,5 +65,14 @@
   "syncToOdoo": "مزامنة مع Odoo",
   "resyncToOdoo": "إعادة المزامنة مع Odoo",
   "synced": "متزامن",
-  "odooConnection": "اتصال Odoo"
+  "odooConnection": "اتصال Odoo",
+  "customerPortal": "بوابة العملاء",
+  "portalBrandTagline": "قدّم تذكرة وتابعها في أي وقت.",
+  "signUp": "إنشاء حساب",
+  "noAccountYet": "لسه معملتش حساب؟",
+  "alreadyHaveAccount": "عندك حساب بالفعل؟",
+  "accountAlreadyExists": "فيه حساب بالفعل بنفس البريد الإلكتروني ده. جرّب تسجّل الدخول بدل كده.",
+  "signupFailed": "معرفناش ننشئ الحساب. جرّبي تاني.",
+  "myTicketsNav": "تذاكري",
+  "trackYourTicket": "تابع تذكرتك"
 }

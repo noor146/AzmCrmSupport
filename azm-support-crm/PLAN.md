@@ -28,12 +28,12 @@ Phase 2 epics are backlog, in priority order.
 - Story: Create/edit/delete articles with tags — **Done**
 - Story: Public search by title/tag — **Done**
 
-## Phase 2 — Backlog (priority order)
-
 ### Epic: Customer Self-Service Portal
-- Story: Customer login/signup (separate from agent auth)
-- Story: Customer submits a ticket
-- Story: Customer tracks their own ticket status/history
+- Story: Customer login/signup (separate from agent auth) — **Done**
+- Story: Customer submits a ticket — **Done**
+- Story: Customer tracks their own ticket status/history — **Done**
+
+## Phase 2 — Backlog (priority order)
 
 ### Epic: SLA & Automation
 - Story: Define response/resolution targets per priority

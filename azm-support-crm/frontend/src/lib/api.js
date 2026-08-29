@@ -72,4 +72,10 @@ export const api = {
   createLead: (token, data) => request('/leads', { method: 'POST', body: data, token }),
   updateLead: (token, id, data) => request(`/leads/${id}`, { method: 'PUT', body: data, token }),
   deleteLead: (token, id) => request(`/leads/${id}`, { method: 'DELETE', token }),
+
+  portalSignup: (data) => request('/portal/signup', { method: 'POST', body: data }),
+  portalLogin: (email, password) => request('/portal/login', { method: 'POST', body: { email, password } }),
+  portalListTickets: (token) => request('/portal/tickets', { token }),
+  portalCreateTicket: (token, data) => request('/portal/tickets', { method: 'POST', body: data, token }),
+  portalGetTicket: (token, id) => request(`/portal/tickets/${id}`, { token }),
 };

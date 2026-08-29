@@ -47,6 +47,24 @@ describe('Customers CRUD', () => {
     expect(res.body.some((c: { id: number }) => c.id === customerId)).toBe(true);
   });
 
+  // Regression: Customer gained a passwordHash column for portal login
+  // (see tests/portal.test.ts) - every one of these endpoints embeds or
+  // returns a Customer record and must never leak that field, same class
+  // of bug as the ticket/assignedAgent leak covered in tickets.test.ts.
+  it('never includes passwordHash on list, detail, create, or update', async () => {
+    const list = await request(app).get('/api/customers').set('Authorization', `Bearer ${token}`);
+    expect(JSON.stringify(list.body)).not.toMatch(/passwordHash/);
+
+    const detail = await request(app).get(`/api/customers/${customerId}`).set('Authorization', `Bearer ${token}`);
+    expect(JSON.stringify(detail.body)).not.toMatch(/passwordHash/);
+
+    const update = await request(app)
+      .put(`/api/customers/${customerId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: uniqueName });
+    expect(JSON.stringify(update.body)).not.toMatch(/passwordHash/);
+  });
+
   it('updates the customer', async () => {
     const res = await request(app)
       .put(`/api/customers/${customerId}`)

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import ChatWidget from '../components/ChatWidget';
 import { useI18n } from '../i18n';
 
@@ -17,6 +18,7 @@ export default function PublicSupportPage() {
       <main className="public-hero">
         <h1>{t('publicHeroTitle')}</h1>
         <p>{t('publicHeroBody')}</p>
+        <Link className="btn-primary public-hero-cta" to="/portal/login">{t('trackYourTicket')}</Link>
       </main>
 
       <ChatWidget />

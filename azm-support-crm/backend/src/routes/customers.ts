@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '../lib/prisma';
 import { requireAuth } from '../middleware/auth';
+import { customerSelect } from '../lib/selects';
 
 export const customersRouter = Router();
 customersRouter.use(requireAuth);
@@ -18,6 +19,7 @@ customersRouter.get('/', async (req, res) => {
         }
       : undefined,
     orderBy: { createdAt: 'desc' },
+    select: customerSelect,
   });
   res.json(customers);
 });
@@ -25,7 +27,10 @@ customersRouter.get('/', async (req, res) => {
 customersRouter.post('/', async (req, res) => {
   const { name, email, phone, company, notes } = req.body ?? {};
   if (!name) return res.status(400).json({ error: 'name is required' });
-  const customer = await prisma.customer.create({ data: { name, email, phone, company, notes } });
+  const customer = await prisma.customer.create({
+    data: { name, email, phone, company, notes },
+    select: customerSelect,
+  });
   res.status(201).json(customer);
 });
 
@@ -35,7 +40,8 @@ customersRouter.get('/:id', async (req, res) => {
     include: { tickets: true },
   });
   if (!customer) return res.status(404).json({ error: 'Customer not found' });
-  res.json(customer);
+  const { passwordHash, ...safeCustomer } = customer;
+  res.json(safeCustomer);
 });
 
 customersRouter.put('/:id', async (req, res) => {
@@ -44,6 +50,7 @@ customersRouter.put('/:id', async (req, res) => {
     const customer = await prisma.customer.update({
       where: { id: Number(req.params.id) },
       data: { name, email, phone, company, notes },
+      select: customerSelect,
     });
     res.json(customer);
   } catch {

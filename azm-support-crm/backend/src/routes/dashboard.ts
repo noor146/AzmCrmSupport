@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '../lib/prisma';
 import { requireAuth, AuthedRequest } from '../middleware/auth';
+import { customerSelect } from '../lib/selects';
 
 export const dashboardRouter = Router();
 dashboardRouter.use(requireAuth);
@@ -26,7 +27,7 @@ dashboardRouter.get('/', async (req: AuthedRequest, res) => {
     prisma.ticket.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
-      include: { customer: true, assignedAgent: { select: { id: true, name: true } } },
+      include: { customer: { select: customerSelect }, assignedAgent: { select: { id: true, name: true } } },
     }),
   ]);
 

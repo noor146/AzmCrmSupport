@@ -217,7 +217,42 @@ azm-support-crm/
       components/
 ```
 
-## 11. Status log
+## 11. Customer Portal — built 2026-08-29
+
+A separate, self-service surface for customers, distinct from the agent app
+in every layer that matters for security:
+
+- **Auth:** `Customer` gained a nullable `passwordHash`. Signup
+  (`POST /api/portal/signup`) claims an existing agent-created `Customer`
+  row by email if one exists and has no password yet, instead of creating a
+  duplicate — an agent may well have entered this customer before they ever
+  signed up. JWTs carry a `role` claim (`'agent'` | `'customer'`);
+  `requireAuth` and the new `requireCustomerAuth` middleware each reject the
+  other role's token even though both are signed with the same secret, so a
+  customer token can never reach agent-only routes or vice versa (see
+  backend/tests/portal.test.ts for the cross-role and cross-customer-data
+  regression tests).
+- **Scope:** a customer can create tickets and list/view only their own
+  (`GET/POST /api/portal/tickets`, `GET /api/portal/tickets/:id` — 404s,
+  not 403s, on another customer's ticket id, to avoid confirming it
+  exists). No status/assignment control — that stays agent-only.
+- **Frontend:** `/portal/login`, `/portal/signup`, `/portal` (ticket
+  list + create), `/portal/tickets/:id`, all under a separate
+  `PortalAuthProvider` (own localStorage keys) so an agent and a customer
+  session coexist in the same browser without clashing. Linked from the
+  public `/support` page ("Track your ticket").
+- **Regression found while building this:** adding `passwordHash` to
+  `Customer` re-opened the exact class of bug §9/tests already guard
+  against for `User` — every route that did `include: { customer: true }`
+  (tickets list/detail, dashboard recent-tickets, the Odoo sync routes) or
+  returned a raw `Customer` row (customers CRUD) started leaking the hash
+  in the response. Fixed by a shared `customerSelect`
+  (`backend/src/lib/selects.ts`) used everywhere a `Customer` is embedded
+  or returned, plus regression tests in `tickets.test.ts` and
+  `customers.test.ts` asserting `passwordHash` never appears in any
+  response body.
+
+## 12. Status log
 
 Keep this section append-only — newest entry last — so an agent resuming
 mid-task knows what's already done without re-reading the whole diff.
@@ -255,3 +290,10 @@ mid-task knows what's already done without re-reading the whole diff.
   tickets/leads/chat that crashed with a 500 + leaked stack trace on
   any invalid value — added `src/lib/validateEnum.ts` plus a generic
   Express error handler as defense-in-depth.
+- 2026-08-29: Moved this project's Odoo instance to a dedicated port
+  (8019) after a real conflict with a system-wide Odoo service and the
+  user's own ad-hoc checkouts, all defaulting to 8069 (see §8). Built
+  the Customer Portal (§11) — the first Phase 2 item to ship. Verified
+  end-to-end in the browser: signup, ticket creation, and confirmed the
+  new ticket shows up correctly on the agent's Kanban board. Full test
+  suite: 33/33 passing.

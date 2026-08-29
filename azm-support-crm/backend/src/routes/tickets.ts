@@ -3,11 +3,11 @@ import { TicketStatus, TicketPriority } from '@prisma/client';
 import { prisma } from '../lib/prisma';
 import { requireAuth, AuthedRequest } from '../middleware/auth';
 import { parseEnumQueryParam, INVALID } from '../lib/validateEnum';
+import { agentSelect, customerSelect } from '../lib/selects';
 
 export const ticketsRouter = Router();
 ticketsRouter.use(requireAuth);
 
-const agentSelect = { id: true, name: true, email: true, isAdmin: true } as const;
 const STATUSES = Object.values(TicketStatus);
 const PRIORITIES = Object.values(TicketPriority);
 
@@ -24,7 +24,7 @@ ticketsRouter.get('/', async (req: AuthedRequest, res) => {
       priority,
       assignedAgentId: assigned_to === 'me' ? req.user!.id : undefined,
     },
-    include: { customer: true, assignedAgent: { select: agentSelect } },
+    include: { customer: { select: customerSelect }, assignedAgent: { select: agentSelect } },
     orderBy: { createdAt: 'desc' },
   });
   res.json(tickets);
@@ -55,7 +55,7 @@ ticketsRouter.get('/:id', async (req, res) => {
   const ticket = await prisma.ticket.findUnique({
     where: { id: Number(req.params.id) },
     include: {
-      customer: true,
+      customer: { select: customerSelect },
       assignedAgent: { select: agentSelect },
       events: { orderBy: { createdAt: 'asc' }, include: { actorUser: { select: agentSelect } } },
     },

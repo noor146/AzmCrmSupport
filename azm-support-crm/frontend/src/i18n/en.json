@@ -65,5 +65,14 @@
   "syncToOdoo": "Sync to Odoo",
   "resyncToOdoo": "Re-sync to Odoo",
   "synced": "Synced",
-  "odooConnection": "Odoo connection"
+  "odooConnection": "Odoo connection",
+  "customerPortal": "Customer Portal",
+  "portalBrandTagline": "Submit a ticket and track it, any time.",
+  "signUp": "Sign up",
+  "noAccountYet": "No account yet?",
+  "alreadyHaveAccount": "Already have an account?",
+  "accountAlreadyExists": "An account with this email already exists. Try logging in instead.",
+  "signupFailed": "Couldn't create your account. Please try again.",
+  "myTicketsNav": "My Tickets",
+  "trackYourTicket": "Track your ticket"
 }

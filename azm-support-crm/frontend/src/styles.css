@@ -45,6 +45,17 @@ button:disabled {
   cursor: default;
 }
 
+a.btn-primary {
+  display: inline-block;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+
 .btn-primary {
   background: var(--accent);
   border-color: var(--accent);
@@ -975,6 +986,10 @@ html, body {
   color: var(--ink-soft);
   font-size: 1.05rem;
   line-height: 1.6;
+}
+
+.public-hero-cta {
+  margin-top: 1.5rem;
 }
 
 /* --- agent live chat page --- */

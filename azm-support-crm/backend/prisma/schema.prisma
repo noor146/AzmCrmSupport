@@ -68,11 +68,13 @@ model Customer {
   notes         String?
   odooPartnerId Int?     @map("odoo_partner_id")
   odooSyncedAt  DateTime? @map("odoo_synced_at")
+  passwordHash  String?  @map("password_hash")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
   tickets Ticket[]
 
+  @@unique([email])
   @@map("customers")
 }
 

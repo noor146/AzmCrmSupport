@@ -8,6 +8,7 @@ import { leadsRouter } from './routes/leads';
 import { dashboardRouter } from './routes/dashboard';
 import { chatRouter } from './routes/chat';
 import { odooRouter } from './routes/odoo';
+import { portalRouter } from './routes/portal';
 
 export const app = express();
 app.use(cors());
@@ -21,6 +22,7 @@ app.use('/api/leads', leadsRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/odoo', odooRouter);
+app.use('/api/portal', portalRouter);
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
