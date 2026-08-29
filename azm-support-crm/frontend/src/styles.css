@@ -565,6 +565,22 @@ html, body {
   color: var(--ink);
 }
 
+.dashboard-kpi-value.kpi-warning {
+  color: #b3261e;
+}
+
+.sla-check-btn {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.55rem;
+  align-self: flex-start;
+  margin-top: 0.15rem;
+}
+
+.sla-check-result {
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
 .dashboard-kpi-label {
   font-size: 0.78rem;
   color: var(--ink-soft);
@@ -792,13 +808,24 @@ html, body {
   padding: 0.5rem 0;
 }
 
-.priority-chip {
+.priority-chip,
+.status-chip {
   font-size: 0.66rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   padding: 0.12rem 0.45rem;
   border-radius: 999px;
+}
+
+/* Generic semantic pair reused for anything binary-ish: synced/pending,
+   open/closed conversation, escalated/normal - "done" always reads as the
+   settled state, "todo" as the one still needing attention. */
+.status-chip.done { background: var(--good-soft, #dcefe3); color: var(--good, #2f7d52); }
+.status-chip.todo { background: var(--pending-soft, #f3e8d1); color: var(--pending, #a9791f); }
+
+.sla-inline-badge {
+  margin-inline-start: 0.5rem;
 }
 
 .priority-low { background: #eef1ef; color: #5b6a63; }

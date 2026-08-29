@@ -28,11 +28,22 @@ export default function DashboardPage() {
   const { t } = useI18n();
   const [data, setData] = useState(null);
   const [odooStatus, setOdooStatus] = useState(null);
+  const [slaResult, setSlaResult] = useState(null);
+
+  function load() {
+    api.getDashboard(token).then(setData);
+  }
 
   useEffect(() => {
-    api.getDashboard(token).then(setData);
+    load();
     api.getOdooStatus(token).then(setOdooStatus).catch(() => setOdooStatus({ connected: false }));
   }, []);
+
+  async function handleRunSlaCheck() {
+    const result = await api.runSlaCheck(token);
+    setSlaResult(result);
+    load();
+  }
 
   if (!data) return <p>{t('loading')}</p>;
 
@@ -68,7 +79,17 @@ export default function DashboardPage() {
           <span className="dashboard-kpi-value">{data.articleCount}</span>
           <span className="dashboard-kpi-label">{t('articles')}</span>
         </div>
+        <div className="dashboard-kpi">
+          <span className={`dashboard-kpi-value${data.overdueTicketCount ? ' kpi-warning' : ''}`}>{data.overdueTicketCount}</span>
+          <span className="dashboard-kpi-label">{t('overdueTickets')}</span>
+          <button className="sla-check-btn" onClick={handleRunSlaCheck}>{t('runSlaCheck')}</button>
+        </div>
       </div>
+      {slaResult && (
+        <p className="muted sla-check-result">
+          {t('slaCheckResultPrefix')} {slaResult.checked} {t('slaCheckResultChecked')}, {slaResult.escalated} {t('slaCheckResultEscalated')}
+        </p>
+      )}
 
       <div className="dashboard-grid">
         <div className="panel-card">

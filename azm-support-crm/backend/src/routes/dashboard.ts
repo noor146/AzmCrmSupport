@@ -14,6 +14,7 @@ dashboardRouter.get('/', async (req: AuthedRequest, res) => {
     leadsByStatus,
     articleCount,
     myOpenTicketCount,
+    overdueTicketCount,
     recentTickets,
   ] = await Promise.all([
     prisma.customer.count(),
@@ -23,6 +24,9 @@ dashboardRouter.get('/', async (req: AuthedRequest, res) => {
     prisma.knowledgeArticle.count(),
     prisma.ticket.count({
       where: { assignedAgentId: req.user!.id, status: { in: ['open', 'in_progress'] } },
+    }),
+    prisma.ticket.count({
+      where: { status: { in: ['open', 'in_progress'] }, slaResolutionDueAt: { lt: new Date() } },
     }),
     prisma.ticket.findMany({
       take: 5,
@@ -38,6 +42,7 @@ dashboardRouter.get('/', async (req: AuthedRequest, res) => {
     customerCount,
     articleCount,
     myOpenTicketCount,
+    overdueTicketCount,
     ticketsByStatus: toCountMap(ticketsByStatus as any, 'status'),
     ticketsByPriority: toCountMap(ticketsByPriority as any, 'priority'),
     leadsByStatus: toCountMap(leadsByStatus as any, 'status'),

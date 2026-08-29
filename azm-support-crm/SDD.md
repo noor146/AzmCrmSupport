@@ -252,7 +252,47 @@ in every layer that matters for security:
   `customers.test.ts` asserting `passwordHash` never appears in any
   response body.
 
-## 12. Status log
+## 12. SLA & Automation — built 2026-08-29
+
+- **Targets:** `SLA_DEFAULTS` in `backend/src/lib/sla.ts` (urgent 30m/4h,
+  high 1h/8h, medium 4h/24h, low 8h/72h, response/resolution). An
+  `SlaPolicy` table can override per priority, but every lookup falls back
+  to these defaults, so the feature works on a fresh, unseeded database
+  (tests included) with zero policy rows.
+- **Applied on ticket creation** (both `POST /api/tickets` and
+  `POST /api/portal/tickets`): `slaResponseDueAt`/`slaResolutionDueAt`
+  computed from priority at creation time and stored on the ticket — not
+  recomputed if priority changes later (a priority bump via manual edit
+  doesn't retroactively tighten/loosen a deadline already communicated).
+- **Auto-assignment:** `backend/src/lib/autoAssign.ts` picks whichever
+  `User` currently has the fewest open/in_progress tickets. Applies
+  whenever a ticket is created without an explicit `assignedAgentId` —
+  every portal ticket, and any agent-created one where the agent didn't
+  pick someone. Logged as an `assigned` TicketEvent so it's visible in the
+  ticket's own activity log, not just implied by the field.
+- **Escalation:** `runSlaEscalationSweep()` finds open/in_progress tickets
+  past `slaResolutionDueAt` that haven't been escalated yet, bumps
+  priority one step (low→medium→high→urgent; urgent stays), sets
+  `slaEscalated` so it only fires once, and logs a new `escalated`
+  TicketEvent type. Runs two ways: automatically every 60s via
+  `setInterval` in `index.ts` (deliberately not `app.ts`, so importing the
+  app in tests never spins up a background timer), and on demand via
+  `POST /api/tickets/sla/run-check` (agent-auth required) — the dashboard's
+  "Run SLA check" button calls this, mainly so the behavior can be
+  demonstrated/tested without waiting on the interval.
+- **Alerting is in-app only:** a dashboard "Overdue tickets" KPI
+  (`slaResolutionDueAt < now` on an open/in_progress ticket) plus an
+  "Overdue"/"SLA escalated" badge on the ticket detail page. No email/SMS
+  — that needs real delivery infrastructure (SMTP creds, a provider
+  account) this project doesn't have, so it's left as a documented gap
+  rather than faked.
+- **Firstresponse/resolution tracking:** `firstRespondedAt` is set the
+  first time a ticket's status moves to `in_progress` (once only);
+  `resolvedAt` the first time it moves to `resolved` or `closed`. Neither
+  is surfaced in the UI yet — they exist for the SLA performance report
+  that's still Phase 2 backlog (PLAN.md).
+
+## 13. Status log
 
 Keep this section append-only — newest entry last — so an agent resuming
 mid-task knows what's already done without re-reading the whole diff.
@@ -297,3 +337,13 @@ mid-task knows what's already done without re-reading the whole diff.
   end-to-end in the browser: signup, ticket creation, and confirmed the
   new ticket shows up correctly on the agent's Kanban board. Full test
   suite: 33/33 passing.
+- 2026-08-29: Built SLA & Automation (§12) — the second Phase 2 item.
+  Also caught and fixed a real gap while wiring up its UI: `.status-chip`
+  had been referenced across 5 pages (sync badges, live-chat status, the
+  Odoo connection indicator) since early in the project but was never
+  actually defined in styles.css, so all of those had been rendering as
+  unstyled plain text the whole time. Verified escalation end-to-end by
+  manually backdating a ticket's SLA due date and running the check from
+  the dashboard button: priority bumped medium→high, activity log got the
+  new `escalated` event, both badges rendered. Full test suite: 44/44
+  passing.

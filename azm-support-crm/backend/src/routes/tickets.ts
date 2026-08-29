@@ -4,6 +4,8 @@ import { prisma } from '../lib/prisma';
 import { requireAuth, AuthedRequest } from '../middleware/auth';
 import { parseEnumQueryParam, INVALID } from '../lib/validateEnum';
 import { agentSelect, customerSelect } from '../lib/selects';
+import { computeSlaDueDates, runSlaEscalationSweep } from '../lib/sla';
+import { pickLeastLoadedAgent } from '../lib/autoAssign';
 
 export const ticketsRouter = Router();
 ticketsRouter.use(requireAuth);
@@ -35,20 +37,38 @@ ticketsRouter.post('/', async (req: AuthedRequest, res) => {
   if (!subject || !customerId) {
     return res.status(400).json({ error: 'subject and customerId are required' });
   }
+
+  const effectivePriority = priority ?? 'medium';
+  const now = new Date();
+  const [{ slaResponseDueAt, slaResolutionDueAt }, autoAgentId] = await Promise.all([
+    computeSlaDueDates(effectivePriority, now),
+    assignedAgentId ? Promise.resolve(Number(assignedAgentId)) : pickLeastLoadedAgent(),
+  ]);
+
   const ticket = await prisma.ticket.create({
     data: {
       subject,
       description,
       category,
-      priority,
+      priority: effectivePriority,
       customerId: Number(customerId),
-      assignedAgentId: assignedAgentId ? Number(assignedAgentId) : undefined,
+      assignedAgentId: autoAgentId ?? undefined,
+      slaResponseDueAt,
+      slaResolutionDueAt,
     },
   });
-  await prisma.ticketEvent.create({
-    data: { ticketId: ticket.id, eventType: 'created', actorUserId: req.user!.id },
-  });
+
+  const events = [{ ticketId: ticket.id, eventType: 'created' as const, actorUserId: req.user!.id }];
+  if (!assignedAgentId && autoAgentId) {
+    events.push({ ticketId: ticket.id, eventType: 'assigned' as const, detail: `agent ${autoAgentId} (auto-assigned, load balancing)`, actorUserId: req.user!.id } as any);
+  }
+  await prisma.ticketEvent.createMany({ data: events as any });
+
   res.status(201).json(ticket);
+});
+
+ticketsRouter.post('/sla/run-check', async (_req, res) => {
+  res.json(await runSlaEscalationSweep());
 });
 
 ticketsRouter.get('/:id', async (req, res) => {
@@ -71,9 +91,14 @@ ticketsRouter.put('/:id', async (req: AuthedRequest, res) => {
 
   const { subject, description, category, priority, status, assignedAgentId } = req.body ?? {};
 
+  const firstRespondedAt =
+    status === 'in_progress' && !existing.firstRespondedAt ? new Date() : undefined;
+  const resolvedAt =
+    status && ['resolved', 'closed'].includes(status) && !existing.resolvedAt ? new Date() : undefined;
+
   const ticket = await prisma.ticket.update({
     where: { id },
-    data: { subject, description, category, priority, status, assignedAgentId },
+    data: { subject, description, category, priority, status, assignedAgentId, firstRespondedAt, resolvedAt },
   });
 
   const events = [];

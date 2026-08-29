@@ -45,6 +45,7 @@ export const api = {
   deleteArticle: (token, id) => request(`/knowledge-base/${id}`, { method: 'DELETE', token }),
 
   getDashboard: (token) => request('/dashboard', { token }),
+  runSlaCheck: (token) => request('/tickets/sla/run-check', { method: 'POST', token }),
 
   getOdooStatus: (token) => request('/odoo/status', { token }),
   syncCustomerToOdoo: (token, id) => request(`/odoo/customers/${id}`, { method: 'POST', token }),

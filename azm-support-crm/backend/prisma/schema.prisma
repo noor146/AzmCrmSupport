@@ -33,6 +33,7 @@ enum TicketEventType {
   status_changed
   assigned
   note_added
+  escalated
 }
 
 enum LeadStatus {
@@ -89,6 +90,11 @@ model Ticket {
   assignedAgentId Int?           @map("assigned_agent_id")
   odooTicketId    Int?           @map("odoo_ticket_id")
   odooSyncedAt    DateTime?      @map("odoo_synced_at")
+  slaResponseDueAt   DateTime?   @map("sla_response_due_at")
+  slaResolutionDueAt DateTime?   @map("sla_resolution_due_at")
+  firstRespondedAt   DateTime?   @map("first_responded_at")
+  resolvedAt         DateTime?   @map("resolved_at")
+  slaEscalated       Boolean     @default(false) @map("sla_escalated")
   createdAt       DateTime       @default(now()) @map("created_at")
   updatedAt       DateTime       @updatedAt @map("updated_at")
 
@@ -97,6 +103,14 @@ model Ticket {
   events        TicketEvent[]
 
   @@map("tickets")
+}
+
+model SlaPolicy {
+  priority         TicketPriority @id
+  responseMinutes  Int            @map("response_minutes")
+  resolutionMinutes Int           @map("resolution_minutes")
+
+  @@map("sla_policies")
 }
 
 model TicketEvent {

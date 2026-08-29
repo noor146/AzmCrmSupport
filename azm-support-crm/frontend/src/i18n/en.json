@@ -74,5 +74,13 @@
   "accountAlreadyExists": "An account with this email already exists. Try logging in instead.",
   "signupFailed": "Couldn't create your account. Please try again.",
   "myTicketsNav": "My Tickets",
-  "trackYourTicket": "Track your ticket"
+  "trackYourTicket": "Track your ticket",
+  "slaResolutionDue": "SLA resolution due",
+  "slaEscalated": "SLA escalated",
+  "overdue": "Overdue",
+  "overdueTickets": "Overdue tickets",
+  "runSlaCheck": "Run SLA check",
+  "slaCheckResultPrefix": "SLA check ran:",
+  "slaCheckResultChecked": "tickets checked",
+  "slaCheckResultEscalated": "escalated"
 }

@@ -5,6 +5,8 @@ import { prisma } from '../lib/prisma';
 import { requireCustomerAuth, AuthedRequest } from '../middleware/auth';
 import { parseEnumQueryParam, INVALID } from '../lib/validateEnum';
 import { TicketCategory, TicketPriority, TicketStatus } from '@prisma/client';
+import { computeSlaDueDates } from '../lib/sla';
+import { pickLeastLoadedAgent } from '../lib/autoAssign';
 
 export const portalRouter = Router();
 
@@ -83,10 +85,31 @@ portalRouter.post('/tickets', async (req: AuthedRequest, res) => {
     return res.status(400).json({ error: `priority must be one of: ${PRIORITIES.join(', ')}` });
   }
 
+  const effectivePriority = priority ?? 'medium';
+  const now = new Date();
+  const [{ slaResponseDueAt, slaResolutionDueAt }, autoAgentId] = await Promise.all([
+    computeSlaDueDates(effectivePriority, now),
+    pickLeastLoadedAgent(),
+  ]);
+
   const ticket = await prisma.ticket.create({
-    data: { subject, description, category, priority, customerId: req.customer!.id },
+    data: {
+      subject,
+      description,
+      category,
+      priority: effectivePriority,
+      customerId: req.customer!.id,
+      assignedAgentId: autoAgentId ?? undefined,
+      slaResponseDueAt,
+      slaResolutionDueAt,
+    },
   });
-  await prisma.ticketEvent.create({ data: { ticketId: ticket.id, eventType: 'created' } });
+
+  const events = [{ ticketId: ticket.id, eventType: 'created' as const }];
+  if (autoAgentId) {
+    events.push({ ticketId: ticket.id, eventType: 'assigned' as const, detail: `agent ${autoAgentId} (auto-assigned, load balancing)` } as any);
+  }
+  await prisma.ticketEvent.createMany({ data: events as any });
   res.status(201).json(ticket);
 });
 

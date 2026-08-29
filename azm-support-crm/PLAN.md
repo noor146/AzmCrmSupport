@@ -33,13 +33,14 @@ Phase 2 epics are backlog, in priority order.
 - Story: Customer submits a ticket — **Done**
 - Story: Customer tracks their own ticket status/history — **Done**
 
-## Phase 2 — Backlog (priority order)
-
 ### Epic: SLA & Automation
-- Story: Define response/resolution targets per priority
-- Story: Auto-assignment rules for new tickets
-- Story: Escalation rules when SLA breached
-- Story: Notifications/alerts (email at minimum)
+- Story: Define response/resolution targets per priority — **Done**
+- Story: Auto-assignment rules for new tickets — **Done**
+- Story: Escalation rules when SLA breached — **Done**
+- Story: Notifications/alerts — **Partial** (in-app "Overdue tickets" KPI
+  + per-ticket badges; no email/SMS delivery — see SDD.md §12)
+
+## Phase 2 — Backlog (priority order)
 
 ### Epic: Reports & Management Dashboards
 - Story: Ticket volume/SLA performance report

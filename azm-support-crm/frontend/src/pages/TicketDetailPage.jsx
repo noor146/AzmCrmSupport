@@ -38,6 +38,9 @@ export default function TicketDetailPage() {
 
   if (!ticket) return <p>{t('loading')}</p>;
 
+  const isOpenState = ['open', 'in_progress'].includes(ticket.status);
+  const resolutionOverdue = isOpenState && ticket.slaResolutionDueAt && new Date(ticket.slaResolutionDueAt) < new Date();
+
   return (
     <div className="ticket-detail">
       <h2>{ticket.subject}</h2>
@@ -48,7 +51,10 @@ export default function TicketDetailPage() {
         <dt>{t('category')}</dt>
         <dd>{ticket.category}</dd>
         <dt>{t('priority')}</dt>
-        <dd>{ticket.priority}</dd>
+        <dd>
+          {ticket.priority}
+          {ticket.slaEscalated && <span className="status-chip todo sla-inline-badge">{t('slaEscalated')}</span>}
+        </dd>
         <dt>{t('status')}</dt>
         <dd>
           <select value={ticket.status} onChange={handleStatusChange}>
@@ -57,6 +63,11 @@ export default function TicketDetailPage() {
         </dd>
         <dt>{t('assignedAgent')}</dt>
         <dd>{ticket.assignedAgent?.name ?? '-'}</dd>
+        <dt>{t('slaResolutionDue')}</dt>
+        <dd>
+          {ticket.slaResolutionDueAt ? new Date(ticket.slaResolutionDueAt).toLocaleString() : '-'}
+          {resolutionOverdue && <span className="status-chip todo sla-inline-badge">{t('overdue')}</span>}
+        </dd>
         <dt>{t('odooSync')}</dt>
         <dd className="odoo-sync-cell">
           {ticket.odooTicketId && (

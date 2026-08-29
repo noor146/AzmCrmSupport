@@ -74,5 +74,13 @@
   "accountAlreadyExists": "فيه حساب بالفعل بنفس البريد الإلكتروني ده. جرّب تسجّل الدخول بدل كده.",
   "signupFailed": "معرفناش ننشئ الحساب. جرّبي تاني.",
   "myTicketsNav": "تذاكري",
-  "trackYourTicket": "تابع تذكرتك"
+  "trackYourTicket": "تابع تذكرتك",
+  "slaResolutionDue": "موعد حل SLA",
+  "slaEscalated": "تم تصعيد SLA",
+  "overdue": "متأخرة",
+  "overdueTickets": "تذاكر متأخرة",
+  "runSlaCheck": "تشغيل فحص SLA",
+  "slaCheckResultPrefix": "نتيجة فحص SLA:",
+  "slaCheckResultChecked": "تذكرة تم فحصها",
+  "slaCheckResultEscalated": "تم تصعيدها"
 }
