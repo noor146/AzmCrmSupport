@@ -152,9 +152,16 @@ Implemented in `backend/src/integrations/odoo.ts` + `backend/src/routes/odoo.ts`
 Talks to Odoo's `/jsonrpc` endpoint (`common.login`, `object.execute_kw`) —
 no extra npm package, no custom Odoo module required.
 
-- **Target instance (local dev):** Odoo 19, `http://localhost:8069`, db `crm`
-  (base + crm apps only, created for this purpose), user `admin`/`admin`.
-  Credentials live in `backend/.env` (gitignored), not committed.
+- **Target instance (local dev):** Odoo 19, `http://localhost:8019`, db `crm`
+  (base + crm + helpdesk installed), user `admin`/`admin`. Credentials live
+  in `backend/.env` (gitignored), not committed. Runs as
+  `odoo19_new/.venv/bin/python odoo-bin --addons-path=... --http-port=8019 -d crm`.
+  Deliberately on its own port rather than the 8069 default — this machine
+  also runs a system-wide Odoo as a systemd service (`/etc/odoo/odoo.conf`)
+  on 8069, and the user runs her own ad-hoc Odoo checkouts manually too
+  (those now default to 8018 via `~/.odoorc`'s `http_port`). Keeping this
+  project's Odoo on a dedicated port means it doesn't break when she starts
+  or stops her other instances.
 - **Customer → `res.partner`**: create-or-update by `Customer.odooPartnerId`.
   Only name/email/phone/notes are mapped for now (no company→parent_id
   linkage yet).
